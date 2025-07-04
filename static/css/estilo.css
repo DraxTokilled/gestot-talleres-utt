@@ -1,0 +1,57 @@
+.carousel-inner img {
+    height: 300px; /* Puedes ajustar: 250px, 200px, etc. */
+    object-fit: cover;
+}
+form {
+  max-width: 400px;
+  margin: 30px auto;
+  padding: 25px 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+form .mb-3 {
+  margin-bottom: 18px;
+}
+
+form label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #333;
+}
+
+form input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.8px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+form input:focus {
+  border-color: #0d6efd; /* azul bootstrap */
+  outline: none;
+  box-shadow: 0 0 5px rgba(13,110,253,0.4);
+}
+
+form button.btn {
+  background-color: #0d6efd;
+  color: white;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+form button.btn:hover {
+  background-color: #0b5ed7;
+}
