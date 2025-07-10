@@ -1,5 +1,5 @@
 .carousel-inner img {
-    height: 300px; /* Puedes ajustar: 250px, 200px, etc. */
+    height: 300px;
     object-fit: cover;
 }
 form {

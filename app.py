@@ -30,12 +30,19 @@ def login():
         cursor.close()
 
         if user:
-            session["usuario"] = user[1]  # Nombre
-            session["sexo"] = user[11]    # Ajusta si el campo sexo está en otra posición
-            return redirect(url_for("index"))
+            session["usuario"] = user[1]     # Nombre
+            session["sexo"] = user[11]       # Sexo (columna 12 de la tabla estudiante)
+            return redirect(url_for("dashboard"))
         else:
             return "Credenciales incorrectas"
     return render_template("login.html")
+
+# Dashboard personalizado
+@app.route("/dashboard")
+def dashboard():
+    if "usuario" in session:
+        return render_template("dashboard.html")
+    return redirect(url_for("login"))
 
 # Registro
 @app.route("/registro", methods=["GET", "POST"])
@@ -88,5 +95,3 @@ def logout():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-
