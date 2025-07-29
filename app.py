@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
+import os
+from werkzeug.utils import secure_filename
 from flask_mysqldb import MySQL
 
 app = Flask(__name__)
@@ -31,7 +33,7 @@ def login():
 
         if user:
             session["usuario"] = user[1]     # Nombre
-            session["sexo"] = user[11]       # Sexo (columna 12 de la tabla estudiante)
+            session["genero"] = user[11]       # Sexo (columna 12 de la tabla estudiante)
             return redirect(url_for("dashboard"))
         else:
             return "Credenciales incorrectas"
@@ -68,8 +70,10 @@ def registro():
         foto = request.files["foto_credencial"] #Esto es un archivo
 
         if foto and foto.filename != '':
-            foto.save(os.path.join("ruta/a/carpeta", secure_filename(foto.filename)))
+            carpeta_fotos = os.path.join("static", "fotos")
+            os.makedirs(carpeta_fotos, exist_ok=True)
             ruta_foto = secure_filename(foto.filename)
+            foto.save(os.path.join(carpeta_fotos, ruta_foto))
         else:
             ruta_foto = None
 
@@ -78,12 +82,36 @@ def registro():
             return "Las contraseñas no coinciden"
 
         cursor = mysql.connection.cursor()
+
+        # Verifica correo
         cursor.execute("SELECT * FROM estudiante WHERE Correo = %s", (correo,))
-        existente = cursor.fetchone()
+        if cursor.fetchone():
+            return render_template(
+                "registro.html",
+                error="El correo ya está registrado.",
+                error_field="correo",
+                form_data=request.form
+                )
 
-        if existente:
-            return "El correo ya está registrado"
+        # Verifica matrícula
+        cursor.execute("SELECT * FROM estudiante WHERE Matricula = %s", (matricula,))
+        if cursor.fetchone():
+            return render_template(
+                "registro.html",
+                error="La matrícula ya está registrada.",
+                error_field="matricula",
+                form_data=request.form
+                )
 
+        # Verifica NSS
+        cursor.execute("SELECT * FROM estudiante WHERE NSS = %s", (nss,))
+        if cursor.fetchone():
+            return render_template(
+                "registro.html",
+                error="El NSS ya está registrado.",
+                error_field="nss",
+                form_data=request.form
+                )
         cursor.execute("""
             INSERT INTO estudiante (
                 Matricula, Nombre, Apellido_P, Apellido_M, Carrera, Genero, Edad, 
