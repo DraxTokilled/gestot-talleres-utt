@@ -5,64 +5,125 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Registro</title>
   <link rel="stylesheet" href="/static/css/estilo.css" />
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
 </head>
 <body>
+  <h2 class="titulo-formulario">Registro alumno</h2>
+  <form action="/registro" method="POST" enctype="multipart/form-data">
+  <div class="form-columns">
+    <!-- Columna 1: primeros 9 campos -->
+    <div class="column">
+      <div class="mb-3">
+        <label for="matricula">Matrícula</label>
+        <input type="text" id="matricula" name="matricula" required />
+      </div>
+      <div class="mb-3">
+        <label for="nombre">Nombre(s)</label>
+        <input type="text" id="nombre" name="nombre" required />
+      </div>
+      <div class="mb-3">
+        <label for="apellido_p">Apellido Paterno</label>
+        <input type="text" id="apellido_p" name="apellido_p" required />
+      </div>
+      <div class="mb-3">
+        <label for="apellido_m">Apellido Materno</label>
+        <input type="text" id="apellido_m" name="apellido_m" required />
+      </div>
+      <div class="mb-3">
+        <label for="carrera">Carrera</label>
+        <input type="text" id="carrera" name="carrera" required />
+      </div>
+      <div class="mb-3">
+        <label for="genero">Género</label>
+        <select id="genero" name="genero" required>
+          <option value="Seleccionar">Selecciona un género</option>
+          <option value="H">Hombre</option>
+          <option value="M">Mujer</option>
+          <option value="LGBTQ">LGBTQ+</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="edad">Edad</label>
+        <input type="number" id="edad" name="edad" required />
+      </div>
+      <div class="mb-3">
+        <label for="nss">NSS</label>
+        <input type="text" id="nss" name="nss" required />
+      </div>
+      <div class="mb-3">
+        <label for="grado_grupo">Grado y Grupo</label>
+        <input type="text" id="grado_grupo" name="grado_grupo" required />
+      </div>
+      <div class="mb-3">
+        <label for="telefono">Teléfono</label>
+        <input type="text" id="telefono" name="telefono" required />
+      </div>
+    </div>
+          <!-- Columna 2: campos restantes -->
+    <div class="column">
+      <div class="mb-3">
+        <label for="tutor">Tutor(a)</label>
+        <input type="text" id="tutor" name="tutor" required />
+      </div>
+      <div class="mb-3">
+        <label for="telefono_emergencia">Teléfono emergencia</label>
+        <input type="text" id="telefono_emergencia" name="telefono_emergencia" required />
+      </div>
+      <div class="mb-3">
+        <label for="correo">Correo electrónico</label>
+        <input type="email" id="correo" name="correo" required />
+      </div>
+      <div class="mb-3">
+        <label for="taller_inscripcion">Taller Inscripción</label>
+        <select id="taller_inscripcion" name="taller_inscripcion" required>
+          <option value="seleccionaT">Selecciona un taller</option>
+          <option value="voleibol">Voleibol</option>
+          <option value="futbol7">Futbol 7</option>
+          <option value="futbolS">Futbol Soccer</option>
+          <option value="escolta">Escolta</option>
+          <option value="beisbol">Beisbol</option>
+          <option value="atletismo">Atletismo</option>
+          <option value="basquetbol">Basquetbol</option>
+          <option value="ajedrezC">Ajedrez Competitivo</option>
+          <option value="ajedrezR">Ajedrez Recreativo</option>
+          <option value="danza">Danza</option>
+          <option value="porristas">Porristas</option>
+          <option value="banda_guerra">Banda de guerra</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="horario">Horario</label>
+        <input type="text" id="horario" name="horario" required />
+      </div>
+      <div class="mb-3">
+        <label for="contrasena">Contraseña</label>
+        <input type="password" id="contrasena" name="contrasena" required />
+      </div>
+      <div class="mb-3">
+        <label for="confirmar">Confirmar contraseña</label>
+        <input type="password" id="confirmar" name="confirmar" required />
+      </div>
+      <div class="mb-3" style="text-align: center;">
+  <label for="foto_credencial">Foto credencial escolar</label>
+  <input type="file" id="foto_credencial" name="foto_credencial" accept="image/*" style="display: none;" />
+  <label for="foto_credencial" class="foto-btn">
+    <span class="plus-icon">+</span>
+  </label>
+      </div>
+      <div class="mb-3" style="text-align: center;">
+  <label for="nota_importante">Nota: El usuario para iniciar sesión <br>
+  utilizará la matrícula,<br>
+  verificar que sea correcta.</label>
+      </div>
+    </div>
 
-  <form action="/registro" method="POST">
-    <div class="mb-3">
-      <label for="nombre" class="form-label">Nombre(s)</label>
-      <input type="text" class="form-control" id="nombre" name="nombre" required />
-    </div>
-    <div class="mb-3">
-      <label for="apellido_p" class="form-label">Apellido Paterno</label>
-      <input type="text" class="form-control" id="apellido_p" name="apellido_p" required />
-    </div>
-    <div class="mb-3">
-      <label for="apellido_m" class="form-label">Apellido Materno</label>
-      <input type="text" class="form-control" id="apellido_m" name="apellido_m" required />
-    </div>
-    <div class="mb-3">
-    <label for="sexo" class="form-label">Sexo</label>
-    <select name="sexo" id="sexo" class="form-control" required>
-        <option value="H">Hombre</option>
-        <option value="M">Mujer</option>
-    </select>
-</div>
-    <div class="mb-3">
-      <label for="matricula" class="form-label">Matrícula</label>
-      <input type="text" class="form-control" id="matricula" name="matricula" required />
-    </div>
-    <div class="mb-3">
-      <label for="correo" class="form-label">Correo electrónico</label>
-      <input type="email" class="form-control" id="correo" name="correo" required />
-    </div>
-    <div class="mb-3">
-      <label for="telefono" class="form-label">Teléfono</label>
-      <input type="text" class="form-control" id="telefono" name="telefono" required />
-    </div>
-    <div class="mb-3">
-      <label for="edad" class="form-label">Edad</label>
-      <input type="number" class="form-control" id="edad" name="edad" required />
-    </div>
-    <div class="mb-3">
-      <label for="grado_grupo" class="form-label">Grado y Grupo</label>
-      <input type="text" class="form-control" id="grado_grupo" name="grado_grupo" required />
-    </div>
-    <div class="mb-3">
-  <label for="carrera" class="form-label">Carrera</label>
-  <input type="text" class="form-control" id="carrera" name="carrera" required />
-</div>
+  </div>
 
-    <div class="mb-3">
-      <label for="contrasena" class="form-label">Contraseña</label>
-      <input type="password" class="form-control" id="contrasena" name="contrasena" required />
-    </div>
-    <div class="mb-3">
-      <label for="confirmar" class="form-label">Confirmar contraseña</label>
-      <input type="password" class="form-control" id="confirmar" name="confirmar" required />
-    </div>
-    <button type="submit" class="btn btn-primary w-100">Registrarse</button>
-  </form>
-
+  <!-- Botón centrado -->
+  <div class="button-container">
+    <button type="submit" class="btn">Guardar registro</button>
+  </div>
+</form>
 </body>
 </html>
