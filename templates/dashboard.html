@@ -64,20 +64,20 @@
 
 <!-- Menú lateral oculto -->
 <div id="menuLateral">
-    <span class="cerrar-btn" onclick="cerrarMenu()">×</span>
+    <span class="cerrar-btn" onclick="cerrarMenu()"></span>
     <a href="#">Inicio</a>
     <a href="#">Mis talleres</a>
     <a href="#">Historial</a>
     <a href="#">Soporte</a>
-    <a href="registro.html">Registros</a>
-    <a href="index.html">Cerrar sesión</a>
+    <a href="{{ url_for('registro') }}">Registros</a>
+    <a href="{{ url_for('index') }}">Cerrar sesión</a>
 </div>
 
 <div class="container mt-5 text-center">
     <img src="{{ url_for('static', filename='img/usuario.png') }}" width="90" class="mb-3">
 
     <h2>
-        {% if session.get('sexo') == 'Femenino' %}
+        {% if session.get('genero') == 'Mujer' %}
             Bienvenida, {{ session['usuario'] }}
         {% else %}
             Bienvenido, {{ session['usuario'] }}
