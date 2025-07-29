@@ -1,3 +1,17 @@
+.linea-negra {
+  border: none;
+  border-top: 2px solid black;
+  margin: 20px 0;
+}
+
+img.static-banner {
+    height: 300px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
+}
+
 .carousel-inner img {
     height: 300px; /* Puedes ajustar: 250px, 200px, etc. */
     object-fit: cover;
@@ -54,4 +68,49 @@ form button.btn {
 
 form button.btn:hover {
   background-color: #0b5ed7;
+}
+
+.footer-personalizado {
+  background-color: #198754; /* color success de Bootstrap */
+  color: white;
+  padding: 40px 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.container-footer {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.footer-personalizado p {
+  margin: 5px 0;
+  font-size: 15px;
+}
+
+.footer-personalizado strong {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.icono-footer {
+  margin: 0 6px;
+  filter: brightness(0) invert(1); /* convierte el ícono en blanco si es oscuro */
+  transition: transform 0.3s ease;
+}
+
+.icono-footer:hover {
+  transform: scale(1.15);
+}
+
+.texto-copy {
+  font-size: 14px;
+  opacity: 0.9;
+}
+.footer-fijo {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
 }
