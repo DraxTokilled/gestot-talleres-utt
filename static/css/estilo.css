@@ -1,6 +1,6 @@
 .linea-negra {
   border: none;
-  border-top: 2px solid black;
+  border-top: 4px solid black;
   margin: 20px 0;
 }
 
@@ -13,7 +13,7 @@ img.static-banner {
 }
 
 .carousel-inner img {
-    width: 1260px;
+    width: 1300px;
     height: 500px; /* ajusta altura a tu gusto */
     object-fit: cover; /* mantiene proporción recortando si es necesario */
 }
