@@ -13,8 +13,9 @@ img.static-banner {
 }
 
 .carousel-inner img {
-    height: 300px; /* Puedes ajustar: 250px, 200px, etc. */
-    object-fit: cover;
+    width: 1260px;
+    height: 500px; /* ajusta altura a tu gusto */
+    object-fit: cover; /* mantiene proporción recortando si es necesario */
 }
 form {
   max-width: 400px;
