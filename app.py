@@ -110,3 +110,10 @@ def logout():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+@app.route('/taller')
+def taller():
+    return render_template('taller.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
