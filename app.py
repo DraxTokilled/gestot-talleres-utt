@@ -116,5 +116,33 @@ def taller():
 def taller1():
     return render_template('taller1.html')
 
+@app.route('/taller2')
+def taller2():
+    return render_template('taller2.html')
+
+@app.route('/taller3')
+def taller3():
+    return render_template('taller3.html')
+
+@app.route('/taller4')
+def taller4():
+    return render_template('taller4.html')
+
+@app.route('/taller5')
+def taller5():
+    return render_template('taller5.html')
+
+@app.route('/taller6')
+def taller6():
+    return render_template('taller6.html')
+
+@app.route('/taller7')
+def taller7():
+    return render_template('taller7.html')
+
+@app.route('/taller8')
+def taller8():
+    return render_template('taller8.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
