@@ -1,22 +1,27 @@
-.carousel-inner img {
-    height: 300px;
-    object-fit: cover;
+.linea-negra {
+  border: none;
+  border-top: 4px solid black;
+  margin: 20px 0;
 }
-.titulo-formulario {
-  font-family: 'Open Sans', 'Montserrat';
-  text-align: center;
-  margin-bottom: 32px;
-  color: #000000;
-  font-size: 2.2rem;
-  font-weight: 700;
-  letter-spacing: 1px;
+
+img.static-banner {
+    height: 300px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
+}
+
+.carousel-inner img {
+    width: 1300px;
+    height: 500px; /* ajusta altura a tu gusto */
+    object-fit: cover; /* mantiene proporción recortando si es necesario */
 }
 form {
-  font-family: 'Open Sans', 'Montserrat';
-  max-width: 1200px;
+  max-width: 400px;
   margin: 30px auto;
   padding: 25px 20px;
-  background: #F5F5F5;
+  background: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -27,19 +32,14 @@ form .mb-3 {
 }
 
 form label {
-  width: 75%;
-  margin: 0 auto 6px auto;
   display: block;
   margin-bottom: 6px;
   font-weight: 600;
   color: #333;
 }
 
-form input,
-form select {
-  width: 75%;
-  margin: 0 auto 18px auto;
-  display: block;
+form input {
+  width: 100%;
   padding: 10px 12px;
   border: 1.8px solid #ccc;
   border-radius: 6px;
@@ -55,8 +55,7 @@ form input:focus {
 }
 
 form button.btn {
-  font: 'Montserrat';
-  background-color: #f26a03;
+  background-color: #0d6efd;
   color: white;
   padding: 12px;
   font-size: 16px;
@@ -69,61 +68,51 @@ form button.btn {
 }
 
 form button.btn:hover {
-  background-color: #069E22;
+  background-color: #0b5ed7;
 }
 
-.form-columns {
-  display: flex;
-  gap: 30px; /* Espacio entre columnas */
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
+.footer-personalizado {
+  background-color: #19a335; /* color success de Bootstrap */
+  color: white;
+  padding: 40px 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1);
 }
 
-.column {
-  flex: 1;
-  min-width: 300px;
-}
-
-.mb-3 {
-  margin-bottom: 36px;
-}
-
-/* Centrar el botón */
-.button-container {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.button-container .btn {
-  width: 200px;
-}
-
-/* Estilo para el botón de foto */
-.foto-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  background: #ffa500;
-  border: none;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+.container-footer {
+  max-width: 960px;
   margin: 0 auto;
-  font-size: 2.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
 }
 
-.foto-btn:hover {
-  background: #ff9800;
+.footer-personalizado p {
+  margin: 5px 0;
+  font-size: 15px;
 }
 
-.plus-icon {
-  color: #fff;
-  font-size: 2.5rem;
-  font-weight: bold;
-  line-height: 1;
-  user-select: none;
+.footer-personalizado strong {
+  font-weight: 600;
+  font-size: 16px;
 }
+
+.icono-footer {
+  margin: 0 6px;
+  filter: brightness(0) invert(1); /* convierte el ícono en blanco si es oscuro */
+  transition: transform 0.3s ease;
+}
+
+.icono-footer:hover {
+  transform: scale(1.15);
+}
+
+.texto-copy {
+  font-size: 14px;
+  opacity: 0.9;
+}
+.footer-fijo {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+}
+
