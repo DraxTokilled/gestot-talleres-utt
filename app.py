@@ -108,12 +108,13 @@ def logout():
     session.clear()
     return redirect(url_for("login"))
 
-if __name__ == "__main__":
-    app.run(debug=True)
-
 @app.route('/taller')
 def taller():
     return render_template('taller.html')
+
+@app.route('/taller1')
+def taller1():
+    return render_template('taller1.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
