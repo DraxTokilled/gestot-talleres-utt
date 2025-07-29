@@ -48,18 +48,31 @@ def dashboard():
 @app.route("/registro", methods=["GET", "POST"])
 def registro():
     if request.method == "POST":
+        matricula = request.form["matricula"]
         nombre = request.form["nombre"]
-        carrera = request.form['carrera']
         apellido_p = request.form["apellido_p"]
         apellido_m = request.form["apellido_m"]
-        sexo = request.form["sexo"]
-        matricula = request.form["matricula"]
-        correo = request.form["correo"]
-        telefono = request.form["telefono"]
+        carrera = request.form['carrera']
+        genero = request.form["genero"]
         edad = request.form["edad"]
+        nss = request.form["nss"]
         grado_grupo = request.form["grado_grupo"]
+        telefono = request.form["telefono"]
+        tutor = request.form["tutor"]
+        telefono_emergencia = request.form["telefono_emergencia"]
+        correo = request.form["correo"]
+        taller_inscripcion = request.form["taller_inscripcion"]
+        horario = request.form["horario"]
         contrasena = request.form["contrasena"]
         confirmar = request.form["confirmar"]
+        foto = request.files["foto_credencial"] #Esto es un archivo
+
+        if foto and foto.filename != '':
+            foto.save(os.path.join("ruta/a/carpeta", secure_filename(foto.filename)))
+            ruta_foto = secure_filename(foto.filename)
+        else:
+            ruta_foto = None
+
 
         if contrasena != confirmar:
             return "Las contraseñas no coinciden"
@@ -73,12 +86,14 @@ def registro():
 
         cursor.execute("""
             INSERT INTO estudiante (
-                Nombre, Apellido_P, Apellido_M, Matricula, Correo,
-                Telefono, Edad, Grado_Grupo, Carrera, Contraseña, Sexo
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                Matricula, Nombre, Apellido_P, Apellido_M, Carrera, Genero, Edad, 
+                NSS, Grado_Grupo, Telefono, Tutor, Telefono_Emergencia, Correo, Taller_Inscripcion, 
+                Horario, Contraseña, Foto_Credencial
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (
-            nombre, apellido_p, apellido_m, matricula, correo,
-            telefono, edad, grado_grupo, carrera, contrasena, sexo
+            matricula, nombre, apellido_p, apellido_m, carrera, genero, edad, nss, grado_grupo,
+            telefono, tutor, telefono_emergencia, correo, taller_inscripcion, horario, contrasena,
+            ruta_foto
         ))
 
         mysql.connection.commit()
