@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Editar alumno</title>
+  <link rel="stylesheet" href="/static/css/estilo.css" />
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <h2 class="titulo-formulario">Editar alumno</h2>
+  <form method="POST" enctype="multipart/form-data">
+    <div class="form-columns">
+      <div class="column">
+        <!-- Matrícula -->
+        <div class="mb-3">
+          <label for="matricula">Matrícula</label>
+          <input type="text" id="matricula" name="matricula" value="{{ datos.Matricula }}" readonly />
+        </div>
+
+        <!-- Nombre -->
+        <div class="mb-3">
+          <label for="nombre">Nombre(s)</label>
+          <input type="text" id="nombre" name="nombre" value="{{ datos.Nombre }}" required />
+        </div>
+
+        <!-- Apellido Paterno -->
+        <div class="mb-3">
+          <label for="apellido_p">Apellido Paterno</label>
+          <input type="text" id="apellido_p" name="apellido_p" value="{{ datos.Apellido_P }}" required />
+        </div>
+
+        <!-- Apellido Materno -->
+        <div class="mb-3">
+          <label for="apellido_m">Apellido Materno</label>
+          <input type="text" id="apellido_m" name="apellido_m" value="{{ datos.Apellido_M }}" required />
+        </div>
+
+        <!-- Carrera -->
+        <div class="mb-3">
+          <label for="carrera">Carrera</label>
+          <input type="text" id="carrera" name="carrera" value="{{ datos.Carrera }}" required />
+        </div>
+
+        <!-- Género -->
+        <div class="mb-3">
+          <label for="genero">Género</label>
+          <select id="genero" name="genero" required>
+            <option disabled {% if not datos.Genero %}selected{% endif %}>Selecciona un género</option>
+            {% for g in ['H', 'M', 'LGBTQ'] %}
+              <option value="{{ g }}" {% if datos.Genero == g %}selected{% endif %}>
+              {% if g == 'H' %}Hombre{% elif g == 'M' %}Mujer{% else %}LGBTQ+{% endif %}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        <!-- Edad -->
+        <div class="mb-3">
+          <label for="edad">Edad</label>
+          <input type="number" id="edad" name="edad" value="{{ datos.Edad }}" required />
+        </div>
+        <!-- NSS-->
+        <div class="mb-3">
+          <label for="nss">NSS</label>
+          <input type="text" id="nss" name="nss" value="{{ datos.NSS }}" readonly />
+        </div>
+        <!-- Grado y Grupo -->
+        <div class="mb-3">
+          <label for="grado_grupo">Grado y Grupo</label>
+          <input type="text" id="grado_grupo" name="grado_grupo" value="{{ datos.Grado_Grupo }}" required />
+        </div>
+
+        <!-- Teléfono -->
+        <div class="mb-3">
+          <label for="telefono">Teléfono</label>
+          <input type="text" id="telefono" name="telefono" value="{{ datos.Telefono }}" required />
+        </div>
+      </div>
+
+      <!-- Columna Derecha -->
+      <div class="column">
+        <!-- Tutor -->
+        <div class="mb-3">
+          <label for="tutor">Tutor(a)</label>
+          <input type="text" id="tutor" name="tutor" value="{{ datos.Tutor }}" required />
+        </div>
+
+        <!-- Teléfono Emergencia -->
+        <div class="mb-3">
+          <label for="telefono_emergencia">Teléfono de Emergencia</label>
+          <input type="text" id="telefono_emergencia" name="telefono_emergencia" value="{{ datos.Telefono_Emergencia }}" required />
+        </div>
+
+        <!--Correo-->
+        <div class="mb-3">
+          <label for="correo">Correo Electrónico</label>
+          <input type="email" id="correo" name="correo" value="{{ datos.Correo }}" readonly />
+        </div>
+        <!-- Taller Inscripción -->
+        <div class="mb-3">
+          <label for="taller_inscripcion">Taller Inscripción</label>
+          <select id="taller_inscripcion" name="taller_inscripcion" required>
+            <option value="">Selecciona un taller</option>
+            {% for taller in [
+              'voleibol', 'futbol7', 'futbolS', 'escolta', 'beisbol', 'atletismo',
+              'basquetbol', 'ajedrezC', 'ajedrezR', 'danza', 'porristas', 'banda_guerra'
+            ] %}
+              <option value="{{ taller }}" {% if datos.Taller_Inscripcion == taller %}selected{% endif %}>
+                {{ taller|capitalize }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Horario -->
+        <div class="mb-3">
+          <label for="horario">Horario</label>
+          <select name="horario" id="horario" required>
+            <option disabled selected>Selecciona un horario</option>
+            {% for h in datos.horarios_disponibles %}
+              <option value="{{ h }}" {% if h == datos.Horario %}selected{% endif %}>{{ h }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Imagen de credencial -->
+        <div class="mb-3">
+          <label for="foto_credencial">Actualizar Foto credencial escolar</label>
+          <input type="file" id="foto_credencial" name="foto_credencial" accept="image/*">
+
+          <!-- Mostrar imagen actual -->
+          <div class="mb-3" style="text-align: center;">
+          <label for="foto_actual" style="display: block; text-align: center;">Foto actual:</label>
+          <div style="width: 200px; margin: 0 auto;">
+            {% if datos.Foto_Credencial %}
+              <img id="foto_actual"
+                  src="{{ url_for('static', filename='fotos/' + datos.Foto_Credencial) }}"
+                  alt="Foto de credencial"
+                  style="width: 100%; height: auto; border: 1px solid #ccc; border-radius: 8px;">
+            {% else %}
+              <p>No se ha subido ninguna foto aún.</p>
+            {% endif %}
+          </div>
+        </div>
+
+
+          <!-- Previsualización de la nueva imagen -->
+          <div id="previsualizacion" class="mt-2" style="display: none;">
+            <p>Previsualización:</p>
+            <img id="imagen_previa" src="" alt="Previsualización" style="max-width: 200px;">
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Botón -->
+    <div class="button-container">
+      <button type="submit" class="btn">Guardar cambios</button>
+    </div>
+  </form>
+  <script>
+    function mostrarImagen(event) {
+      const archivo = event.target.files[0];
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        document.getElementById('imagen_previa').src = e.target.result;
+        document.getElementById('previsualizacion').style.display = 'block';
+      }
+
+      if (archivo) {
+        reader.readAsDataURL(archivo);
+      }
+    }
+
+    document.getElementById("foto_credencial").addEventListener("change", mostrarImagen);
+  </script>
+</body>
+</html>

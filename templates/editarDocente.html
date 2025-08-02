@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Editar Docente</title>
+    <link rel="stylesheet" href="/static/css/estilo.css" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h2 class="titulo-formulario">Editar Docente</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <div class="form-columns">
+            <div class="column">
+                <!-- Matrícula -->
+                <div class="mb-3">
+                    <label for="matriculaD">Matrícula</label>
+                    <input type="text" id="matriculaD" name="matriculaD" value="{{ datos.Matricula_Docente }}" readonly />
+                </div>
+
+                <!-- Nombre -->
+                <div class="mb-3">
+                    <label for="nombreD">Nombre(s)</label>
+                    <input type="text" id="nombreD" name="nombreD" value="{{ datos.Nombre_D }}" required />
+                </div>
+
+                <!-- Apellido Paterno -->
+                <div class="mb-3">
+                    <label for="apellido_p_D">Apellido Paterno</label>
+                    <input type="text" id="apellido_p_D" name="apellido_p_D" value="{{ datos.Apellido_P_D }}" required />
+                </div>
+
+                <!-- Apellido Materno -->
+                <div class="mb-3">
+                    <label for="apellido_m_D">Apellido Materno</label>
+                    <input type="text" id="apellido_m_D" name="apellido_m_D" value="{{ datos.Apellido_M_D }}" required />
+                </div>
+                <!--Correo-->
+                <div class="mb-3">
+                    <label for="correo_D">Correo Electrónico</label>
+                    <input type="email" id="correo_D" name="correo_D" value="{{ datos.Correo_D }}" readonly />
+                </div>
+            </div>
+            
+            <!-- Columna Derecha -->
+            <div class="column">
+                <!-- Cédula Profesional -->
+                <div class="mb-3">
+                    <label for="cedula_profesional">Cédula Profesional</label>
+                    <input type="text" id="cedula_profesional" name="cedula_profesional" value="{{ datos.Cedula_P_D }}" readonly />
+                </div>
+
+                <!-- Taller Impartir -->
+                <div class="mb-3">
+                    <label for="taller_impartir">Taller a Impartir</label>
+                    <select id="taller_impartir" name="taller_impartir" required>
+                        <option value="">Selecciona un taller</option>
+                        {% for taller in [
+                            'voleibol', 'futbol7', 'futbolS', 'escolta', 'beisbol', 'atletismo',
+                            'basquetbol', 'ajedrezC', 'ajedrezR', 'danza', 'porristas', 'banda_guerra'
+                        ] %}
+                            <option value="{{ taller }}" {% if datos.Taller_Impartir == taller %}selected{% endif %}>
+                                {{ taller|capitalize }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!--Estado-->
+                <div class="mb-3">
+                    <label for="estado">Estatus</label>
+                    <select id="estado" name="estado" required>
+                        <option disabled {% if not datos.Estatus %}selected{% endif %}>Selecciona un estatus</option>
+                        {% for e in ['A', 'B', 'BT'] %}
+                            <option value="{{ e }}" {% if datos.Estatus == e %}selected{% endif %}>
+                            {% if e == 'A' %}Activo{% elif e == 'B' %}Baja{% else %}Baja Temporal{% endif %}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                    <!-- Imagen de credencial -->
+                <div class="mb-3">
+                    <label for="foto_credencialD">Actualizar Foto credencial escolar</label>
+                    <input type="file" id="foto_credencialD" name="foto_credencialD" accept="image/*">
+
+                    <!-- Mostrar imagen actual -->
+                    <div class="mb-3" style="text-align: center;">
+                    <label for="foto_actual" style="display: block; text-align: center;">Foto actual:</label>
+                    <div style="width: 200px; margin: 0 auto;">
+                        {% if datos.Foto_CredencialD %}
+                            <img id="foto_actual"
+                                src="{{ url_for('static', filename='fotos/' + datos.Foto_CredencialD) }}"
+                                alt="Foto de credencial"
+                                style="width: 100%; height: auto; border: 1px solid #ccc; border-radius: 8px;">
+                        {% else %}
+                            <p>No se ha subido ninguna foto aún.</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+
+                    <!-- Previsualización de la nueva imagen -->
+                    <div id="previsualizacion" class="mt-2" style="display: none;">
+                        <p>Previsualización:</p>
+                        <img id="imagen_previa" src="" alt="Previsualización" style="max-width: 200px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Botón -->
+        <div class="button-container">
+            <button type="submit" class="btn">Guardar cambios</button>
+        </div>
+    </form>
+    <script>
+        function mostrarImagen(event) {
+        const archivo = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            document.getElementById('imagen_previa').src = e.target.result;
+            document.getElementById('previsualizacion').style.display = 'block';
+        }
+
+        if (archivo) {
+            reader.readAsDataURL(archivo);
+        }
+        }
+
+        document.getElementById("foto_credencialD").addEventListener("change", mostrarImagen);
+    </script>
+</body>
+</html> 

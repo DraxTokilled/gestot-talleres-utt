@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Editar Taller</title>
+    <link rel="stylesheet" href="/static/css/estilo.css" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h2 class="titulo-formulario">Editar Taller</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <!-- Nombre taller -->
+        <div class="mb-3">
+            <label for="Nombre_T">Nombre Taller</label>
+            <input type="text" id="nombre_T" name="nombre_T" value="{{ datos.Nombre_T }}" required />
+        </div>
+        <!-- Nombre docente -->
+        <div class="mb-3">
+            <label for="Nombre_D">Nombre Docente</label>
+            <input type="text" id="nombre_D" name="nombre_D" value="{{ datos.Nombre_D }}" required />
+        </div>
+        <!-- Días del Taller (Checklist editable con días seleccionados) -->
+        <div class="mb-3">
+        <label>Días del Taller:</label><br>
+
+        <label>
+            <input type="checkbox" name="dias_t[]" value="Lunes"
+                onchange="mostrarHorario('Lunes')"
+                {% if 'Lunes' in dias_seleccionados %}checked{% endif %}>
+            Lunes
+        </label><br>
+
+        <label>
+            <input type="checkbox" name="dias_t[]" value="Martes"
+                onchange="mostrarHorario('Martes')"
+                {% if 'Martes' in dias_seleccionados %}checked{% endif %}>
+            Martes
+        </label><br>
+
+        <label>
+            <input type="checkbox" name="dias_t[]" value="Miércoles"
+                onchange="mostrarHorario('Miércoles')"
+                {% if 'Miércoles' in dias_seleccionados %}checked{% endif %}>
+            Miércoles
+        </label><br>
+
+        <label>
+            <input type="checkbox" name="dias_t[]" value="Jueves"
+                onchange="mostrarHorario('Jueves')"
+                {% if 'Jueves' in dias_seleccionados %}checked{% endif %}>
+            Jueves
+        </label><br>
+
+        <label>
+            <input type="checkbox" name="dias_t[]" value="Viernes"
+                onchange="mostrarHorario('Viernes')"
+                {% if 'Viernes' in dias_seleccionados %}checked{% endif %}>
+            Viernes
+        </label><br><br>
+        </div>
+        <!-- Horarios por Día (generados dinámicamente en edición) -->
+        <div class="mb-3">
+        <div id="contenedor-horarios">
+            {% for dia in dias_seleccionados %}
+            <div id="grupo_{{ dia }}">
+                <label>{{ dia }}:</label>
+                <input type="time" name="horario_{{ dia }}_inicio"
+                    value="{{ horarios[dia]['inicio'] if horarios.get(dia) else '' }}"
+                    required>
+
+                <input type="time" name="horario_{{ dia }}_fin"
+                    value="{{ horarios[dia]['fin'] if horarios.get(dia) else '' }}"
+                    required><br>
+            </div>
+            {% endfor %}
+        </div>
+        </div>
+
+        <!--Estado-->
+        <div class="mb-3">
+            <label for="estado">Estatus</label>
+            <select id="estado" name="estado" required>
+                <option disabled {% if not datos.Estatus %}selected{% endif %}>Selecciona un estatus</option>
+                {% for e in ['A', 'B', 'BT'] %}
+                    <option value="{{ e }}" {% if datos.Estatus == e %}selected{% endif %}>
+                    {% if e == 'A' %}Activo{% elif e == 'B' %}Baja{% else %}Baja Temporal{% endif %}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Botón -->
+        <div class="button-container">
+            <button type="submit" class="btn">Guardar cambios</button>
+        </div>
+    </form>
+
+    <!-- Script dinámico -->
+    <script>
+    function mostrarHorario(dia) {
+        const contenedor = document.getElementById("contenedor-horarios");
+        const idGrupo = "grupo_" + dia;
+        const checkbox = document.querySelector('input[value="' + dia + '"]');
+
+        if (checkbox.checked && !document.getElementById(idGrupo)) {
+            const div = document.createElement("div");
+            div.id = idGrupo;
+            div.innerHTML = `
+                <label>${dia}:</label>
+                <input type="time" name="horario_${dia}_inicio" required>
+                <input type="time" name="horario_${dia}_fin" required><br>
+            `;
+            contenedor.appendChild(div);
+        } else if (!checkbox.checked && document.getElementById(idGrupo)) {
+            document.getElementById(idGrupo).remove();
+        }
+        }
+    </script>
+</body>
+</html>

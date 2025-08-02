@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Registro Taller</title>
+    <link rel="stylesheet" href="/static/css/estilo.css" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
+</head>
+    <body>
+        <h2 class="titulo-formulario">Registro Taller</h2>
+        <form action="/registroTaller" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="Nombre_T">Nombre Taller</label>
+                <input type="text" id="Nombre_T" name="Nombre_T value="{{ request.form.get('Nombre_T', '') }}" class="{% if error_field == 'Nombre_T' %}input-error{% endif %}" required>
+                {% if error_field == 'Nombre_T' %}<div class="error-message">{{ error }}</div>{% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="Nombre_D">Nombre Docente</label>
+                <input type="text" id="Nombre_D" name="Nombre_D" value="{{ request.form.get('Nombre_D', '') }}" required>
+            </div>
+            <!-- Días del Taller (Checklist) -->
+            <div class="mb-3">
+                <label>Días del Taller:</label><br>
+                <label><input type="checkbox" name="dias_t[]" value="Lunes" onchange="mostrarHorario('Lunes')"> Lunes</label><br>
+                <label><input type="checkbox" name="dias_t[]" value="Martes" onchange="mostrarHorario('Martes')"> Martes</label><br>
+                <label><input type="checkbox" name="dias_t[]" value="Miércoles" onchange="mostrarHorario('Miércoles')"> Miércoles</label><br>
+                <label><input type="checkbox" name="dias_t[]" value="Jueves" onchange="mostrarHorario('Jueves')"> Jueves</label><br>
+                <label><input type="checkbox" name="dias_t[]" value="Viernes" onchange="mostrarHorario('Viernes')"> Viernes</label><br><br>
+            </div>
+            <!-- Horarios por Día (inicialmente ocultos) -->
+            <div class="mb-3">
+                <div id="contenedor-horarios"></div>
+            </div>
+            <div class="mb-3">
+                <label for="estado">Estatus</label>
+                <select id="estado" name="estado" required>
+                    <option value="">Selecciona un estatus</option>
+                    <option value="A" {% if request.form.get('estado') == 'A' %}selected{% endif %}>Activo</option>
+                    <option value="B" {% if request.form.get('estado') == 'B' %}selected{% endif %}>Baja</option>
+                    <option value="BT" {% if request.form.get('estado') == 'BT' %}selected{% endif %}>Baja Temporal</option>
+                </select>
+            </div>
+            <div class="button-container">
+                    <button type="submit" class="btn">Guardar registro</button>
+            </div>
+        </form>
+        <!-- JavaScript para mostrar campos de horario dinámicamente -->
+        <script>
+        function mostrarHorario(dia) {
+            const contenedor = document.getElementById("contenedor-horarios");
+            const idGrupo = "grupo_" + dia;
+            if (!document.getElementById(idGrupo)) {
+            const div = document.createElement("div");
+            div.id = idGrupo;
+            div.innerHTML = `
+                <label>${dia}:</label>
+                <input type="time" name="horario_${dia}_inicio" required>
+                
+                <input type="time" name="horario_${dia}_fin" required><br>
+            `;
+            contenedor.appendChild(div);
+            } else {
+            // Si el día ya está marcado, lo elimina si se desmarca
+            const checkbox = document.querySelector('input[value="' + dia + '"]');
+            if (!checkbox.checked) {
+                document.getElementById(idGrupo).remove();
+            }
+            }
+        }
+        </script>
+    </body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Registro</title>
+  <title>Registro Alumno</title>
   <link rel="stylesheet" href="/static/css/estilo.css" />
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
@@ -15,8 +15,12 @@
       <div class="column">
         <div class="mb-3">
           <label for="matricula">Matrícula</label>
-          <input type="text" id="matricula" name="matricula" class="{% if error_field == 'matricula' %}input-error{% endif %}" value="{{ request.form.get('matricula', '') }}" required>
-          {% if error_field == 'matricula' %}<div class="error-message">{{ error }}</div>{% endif %}
+          <input type="text" id="matricula" name="matricula"
+              class="{% if 'matricula' in errors %}input-error{% endif %}"
+              value="{{ form_data.get('matricula', '') }}" required>
+          {% if 'matricula' in errors %}
+              <div class="error-message">{{ errors['matricula'] }}</div>
+          {% endif %}
         </div>
         <div class="mb-3">
           <label for="nombre">Nombre(s)</label>
@@ -49,10 +53,14 @@
           <input type="number" id="edad" name="edad" value="{{ request.form.get('edad', '') }}" required>
         </div>
         <div class="mb-3">
-          <label for="nss">NSS</label>
-          <input type="text" id="nss" name="nss" class="{% if error_field == 'nss' %}input-error{% endif %}" value="{{ request.form.get('nss', '') }}" required>
-          {% if error_field == 'nss' %}<div class="error-message">{{ error }}</div>{% endif %}
-        </div>
+                <label for="nss">NSS</label>
+                <input type="text" id="nss" name="nss"
+                    class="{% if 'nss' in errors %}input-error{% endif %}"
+                    value="{{ form_data.get('nss', '') }}" required>
+                {% if 'nss' in errors %}
+                    <div class="error-message">{{ errors['nss'] }}</div>
+                {% endif %}
+          </div>
         <div class="mb-3">
           <label for="grado_grupo">Grado y Grupo</label>
           <input type="text" id="grado_grupo" name="grado_grupo" value="{{ request.form.get('grado_grupo', '') }}" required>
@@ -69,23 +77,36 @@
           <input type="text" id="tutor" name="tutor" value="{{ request.form.get('tutor', '') }}" required>
         </div>
         <div class="mb-3">
-          <label for="telefono_emergencia">Teléfono emergencia</label>
+          <label for="telefono_emergencia">Teléfono Emergencia</label>
           <input type="text" id="telefono_emergencia" name="telefono_emergencia" value="{{ request.form.get('telefono_emergencia', '') }}" required>
         </div>
         <div class="mb-3">
-          <label for="correo">Correo electrónico</label>
-          <input type="email" id="correo" name="correo" class="{% if error_field == 'correo' %}input-error{% endif %}" value="{{ request.form.get('correo', '') }}" required>
-          {% if error_field == 'correo' %}<div class="error-message">{{ error }}</div>{% endif %}
+                <label for="correo">Correo Electrónico</label>
+                <input type="email" id="correo" name="correo"
+                    class="{% if 'correo' in errors %}input-error{% endif %}"
+                    value="{{ form_data.get('correo', '') }}" required>
+                {% if 'correo' in errors %}
+                    <div class="error-message">{{ errors['correo'] }}</div>
+                {% endif %}
         </div>
         <div class="mb-3">
-          <label for="taller_inscripcion">Taller Inscripción</label>
-          <select id="taller_inscripcion" name="taller_inscripcion" required>
-            <option value="">Selecciona un taller</option>
-            {% for taller in ['voleibol','futbol7','futbolS','escolta','beisbol','atletismo','basquetbol','ajedrezC','ajedrezR','danza','porristas','banda_guerra'] %}
-              <option value="{{ taller }}" {% if request.form.get('taller_inscripcion') == taller %}selected{% endif %}>{{ taller|capitalize }}</option>
-            {% endfor %}
-          </select>
-        </div>
+        <label for="taller_inscripcion">Taller Inscripción</label>
+        <select id="taller_inscripcion" name="taller_inscripcion" required>
+          <option value="seleccionaT">Selecciona un taller</option>
+          <option value="voleibol">Voleibol</option>
+          <option value="futbol7">Futbol 7</option>
+          <option value="futbolS">Futbol Soccer</option>
+          <option value="escolta">Escolta</option>
+          <option value="beisbol">Beisbol</option>
+          <option value="atletismo">Atletismo</option>
+          <option value="basquetbol">Basquetbol</option>
+          <option value="ajedrezC">Ajedrez Competitivo</option>
+          <option value="ajedrezR">Ajedrez Recreativo</option>
+          <option value="danza">Danza</option>
+          <option value="porristas">Porristas</option>
+          <option value="banda_guerra">Banda de guerra</option>
+        </select>
+      </div>
         <div class="mb-3">
           <label for="horario">Horario</label>
           <select id="horario" name="horario" required>
@@ -97,7 +118,7 @@
           <input type="password" id="contrasena" name="contrasena" required>
         </div>
         <div class="mb-3">
-          <label for="confirmar">Confirmar contraseña</label>
+          <label for="confirmar">Confirmar Contraseña</label>
           <input type="password" id="confirmar" name="confirmar" required>
         </div>
         <div class="mb-3" style="text-align: center;">
