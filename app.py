@@ -552,3 +552,43 @@ def taller8():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+from flask import Flask, render_template, request
+from flask_mysqldb import MySQL
+
+app = Flask(__name__)
+
+# Configuración de la base de datos
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'gestor_talleres'
+
+mysql = MySQL(app)
+
+@app.route('/consultar', methods=['GET', 'POST'])
+def consultar():
+    resultados = []
+
+    if request.method == 'POST':
+        tipo = request.form['tipo']
+        busqueda = request.form['busqueda']
+
+        cur = mysql.connection.cursor()
+
+        if tipo == 'estudiante':
+            query = f"SELECT Nombre, Apellido_P, Apellido_M, Matricula FROM estudiante WHERE Nombre LIKE %s OR Matricula LIKE %s"
+        elif tipo == 'docente':
+            query = f"SELECT Nombre_D, Apellido_P_D, Apellido_M_D, Matricula_Docente FROM docentes WHERE Nombre_D LIKE %s OR Matricula_Docente LIKE %s"
+        elif tipo == 'taller':
+            query = f"SELECT Nombre_T, Nombre_D FROM taller WHERE Nombre_T LIKE %s OR Nombre_D LIKE %s"
+        else:
+            query = ""
+        
+        if query:
+            cur.execute(query, (f"%{busqueda}%", f"%{busqueda}%"))
+            resultados = cur.fetchall()
+        
+        cur.close()
+
+    return render_template('consultar.html', resultados=resultados)
