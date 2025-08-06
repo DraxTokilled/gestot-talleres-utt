@@ -50,34 +50,50 @@ def dashboard():
     if "usuario" in session:
         return render_template("dashboard.html")
     return redirect(url_for("login"))
+#consultas exactas o mostrar todo#
 
-#Consultas 
 @app.route('/consultar', methods=['GET', 'POST'])
 def consultar():
     resultados = []
+    tipo = ""
 
     if request.method == 'POST':
         tipo = request.form['tipo']
-        busqueda = request.form['busqueda']
+        busqueda = request.form.get('busqueda', '')
+        mostrar_todo = request.form.get('mostrar_todo')
 
         cur = mysql.connection.cursor()
 
         if tipo == 'estudiante':
-            query = "SELECT Nombre, Apellido_P, Apellido_M, Matricula FROM estudiante WHERE Nombre LIKE %s OR Matricula LIKE %s"
+            query = "SELECT Nombre, Apellido_P, Apellido_M, Matricula FROM estudiante"
+            if not mostrar_todo:
+                query += " WHERE Nombre LIKE %s OR Matricula LIKE %s"
+                cur.execute(query, (f"%{busqueda}%", f"%{busqueda}%"))
+            else:
+                cur.execute(query)
+
         elif tipo == 'docente':
-            query = "SELECT Nombre_D, Apellido_P_D, Apellido_M_D, Matricula_Docente FROM docentes WHERE Nombre_D LIKE %s OR Matricula_Docente LIKE %s"
+            query = "SELECT Nombre_D, Apellido_P_D, Apellido_M_D, Matricula_Docente FROM docentes"
+            if not mostrar_todo:
+                query += " WHERE Nombre_D LIKE %s OR Matricula_Docente LIKE %s"
+                cur.execute(query, (f"%{busqueda}%", f"%{busqueda}%"))
+            else:
+                cur.execute(query)
+
         elif tipo == 'taller':
-            query = "SELECT Nombre_T, Nombre_D FROM taller WHERE Nombre_T LIKE %s OR Nombre_D LIKE %s"
-        else:
-            query = ""
+            query = "SELECT Nombre_T, Nombre_D FROM taller"
+            if not mostrar_todo:
+                query += " WHERE Nombre_T LIKE %s OR Nombre_D LIKE %s"
+                cur.execute(query, (f"%{busqueda}%", f"%{busqueda}%"))
+            else:
+                cur.execute(query)
 
-        if query:
-            cur.execute(query, (f"%{busqueda}%", f"%{busqueda}%"))
-            resultados = cur.fetchall()
-
+        resultados = cur.fetchall()
         cur.close()
 
-    return render_template('consultar.html', resultados=resultados)
+    return render_template('consultar.html', resultados=resultados, tipo=tipo)
+
+
 
 
 #Registro Taller
