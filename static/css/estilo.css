@@ -1,17 +1,40 @@
+
+body {
+  padding: 10px 12px;
+  font-family: 'Montserrat', sans-serif;
+}
+.mi-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+  padding: 20px;
+  background-color: #fff; /* o el color que uses en tus otras páginas */
+  border-bottom: 2px solid #000; /* opcional: línea inferior */
+}
+
+.mi-header img {
+  height: 100px; /* o el tamaño que necesites */
+  object-fit: contain;
+}
+
+.mi-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.mi-header p {
+  margin: 4px 0 0 0;
+  font-size: 16px;
+  color: #666;
+}
+
 .linea-negra {
   border: none;
   border-top: 4px solid black;
   margin: 20px 0;
-}
-
-img#foto_actual {
-  display: block;
-  margin-top: 5px;
-  max-width: 100%;
-  height: auto;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 4px;
 }
 
 .titulo-formulario {
@@ -67,9 +90,9 @@ form select {
 }
 
 form input:focus {
-  border-color: #0d6efd; /* azul bootstrap */
+  border-color: #f60;
   outline: none;
-  box-shadow: 0 0 5px rgba(13,110,253,0.4);
+  box-shadow: 0 0 5px rgba(253, 157, 13, 0.7);
 }
 form button.btn {
   font: 'Montserrat';
@@ -200,18 +223,49 @@ form label {
 
 .card {
   background-color: white;
-  padding: 20px;
+  padding: 40px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  border-radius: 8px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center; 
+  justify-content: space-between; 
+  gap: 20px;
 }
-
+.texto-left {
+  text-align: left;
+  margin-right: auto;
+  margin-left:65%;
+  justify-content: space-between; 
+  gap: 20px;
+  position: absolute;
+}
 .imagen-placeholder {
-  width: 100%;
+  width: 60%;
   height: auto;
   margin-bottom: 15px;
   border-radius: 4px;
   display: block;
   object-fit: cover;
+  margin-right:40%
+}
+
+.texto-right {
+  text-align: right;
+  margin-left: auto;
+  margin-right:65%;
+  justify-content: space-between;
+  gap: 20px;
+  position: absolute;
+}
+
+.imagen-reversa {
+  width: 60%;
+  height: auto;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  display: block;
+  object-fit: cover;
+  margin-left:40%;
 }
 
 .imagen-placeholder.small {
@@ -230,21 +284,27 @@ form label {
 }
 
 .footer-personalizado {
-  background-color: #19a335; /* color success de Bootstrap */
+  background-color: #1ea437;
   color: white;
-  padding: 40px 0;
+  padding: 40px 0 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
 .container-footer {
-  max-width: 960px;
+  max-width: 1200px;
   margin: 0 auto;
+}
+
+.footer-col {
+  margin-bottom: 20px;
 }
 
 .footer-personalizado p {
   margin: 5px 0;
   font-size: 15px;
+  text-align: left;
 }
 
 .footer-personalizado strong {
@@ -252,29 +312,37 @@ form label {
   font-size: 16px;
 }
 
+.social-icons {
+  display: flex;
+  align-items: center;  /* Alineación vertical */
+  gap: 12px;            /* Espacio horizontal entre íconos */
+  margin-top: 10px;
+}
+
 .icono-footer {
-  margin: 0 6px;
-  filter: brightness(0) invert(1); /* convierte el ícono en blanco si es oscuro */
+  height: 24px;
+  width: 24px;
+  display: inline-block;
+  vertical-align: middle;     /* Asegura alineación vertical */
+  filter: brightness(0) invert(1);
   transition: transform 0.3s ease;
+  margin: 0;                  /* Quita márgenes extra */
+  padding: 0;
 }
 
 .icono-footer:hover {
   transform: scale(1.15);
 }
 
+.mapa-footer {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  margin-top: 10px;
+  border-radius: 4px;
+}
+
 .texto-copy {
   font-size: 14px;
   opacity: 0.9;
 }
-.color-comunicate {
-  color: #ffffff;
-}
-
-.footer-fijo {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  z-index: 100;
-}
-

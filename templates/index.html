@@ -5,12 +5,14 @@
     <title>Sistema de Talleres UTT</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+
 </head>
 <body>
 
-<!--  Encabezado -->
+<!-- 🟢 Encabezado -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light px-4 py-3">
-    <img src="{{ url_for('static', filename='img/LOGO UTT.png') }}" alt="Logo UTT" height="90">
+    <img src="{{ url_for('static', filename='img/LOGO UTT.png') }}" alt="Logo UTT" height="150">
     <div class="mx-auto text-center">
         <h4 class="mb-0">Sistema de control y gestión de talleres UTT</h4>
         <small class="text-muted">Universidad Tecnológica de Tlaxcala</small>
@@ -18,35 +20,65 @@
     <div>
 <a href="{{ url_for('login') }}" class="btn btn-outline-success btn-sm mx-2">Iniciar Sesión</a>
 </nav>
-<CENTER><h3>TALLERES</h3></CENTER>
-<div id="carouselLento" class="carousel slide mt-4 container" data-bs-ride="carousel" data-bs-interval="5000">
-    <div class="carousel-inner rounded shadow">
-        <div class="carousel-item active">
-            <img src="{{ url_for('static', filename='img/b_01.jpg') }}" class="d-block w-100" alt="Imagen lenta 1">
-        </div>
-        <div class="carousel-item">
-            <img src="{{ url_for('static', filename='img/web_banner_convo_2025_03.png') }}" class="d-block w-100" alt="Imagen lenta 2">
-        </div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselLento" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselLento" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-    </button>
+<hr class="linea-negra">
+<br>
+<CENTER><h3>Talleres</h3></CENTER>
+<!-- 🟢 Imagen estática -->
+<div class="mt-4 container">
+    <img src="{{ url_for('static', filename='img/web_banner_convo_2025_03.png') }}" class="d-block w-100 rounded shadow" alt="Banner convocatoria 2025">
 </div>
 
-<!-- Carrusel RÁPIDO (el que ya tenías) -->
+
+<!-- 🟢 Carrusel RÁPIDO-->
 <div id="carouselExample" class="carousel slide mt-4 container" data-bs-ride="carousel">
     <div class="carousel-inner rounded shadow">
         <div class="carousel-item active">
-            <img src="{{ url_for('static', filename='img/logo1.jpg') }}" class="d-block w-100" alt="Taller 1">
+            <a href="{{ url_for('futbol_soccer') }}">
+            <img src="{{ url_for('static', filename='img/fut.jpg') }}" class="d-block" alt="Taller 1">
+        </div></a>
+        <div class="carousel-item">
+            <a href="{{ url_for('basquetbol') }}">
+            <img src="{{ url_for('static', filename='img/basquet.jpg') }}" class="d-block" alt="Taller 2">
         </div>
         <div class="carousel-item">
-            <img src="{{ url_for('static', filename='img/logo2.jpg') }}" class="d-block w-100" alt="Taller 2">
+            <a href="{{ url_for('voleibol') }}"></a>
+            <img src="{{ url_for('static', filename='img/voley.jpg') }}" class="d-block" alt="Taller 3">
         </div>
         <div class="carousel-item">
-            <img src="{{ url_for('static', filename='img/logo3.jpg') }}" class="d-block w-100" alt="Taller 3">
+            <a href="{{ url_for('escolta') }}"></a>
+            <img src="{{ url_for('static', filename='img/escolta.jpg') }}" class="d-block" alt="Taller 4">
+        </div>
+        <div class="carousel-item">
+            <a href="{{ url_for('banda_guerra') }}"></a>
+            <img src="{{ url_for('static', filename='img/banda_guerra.jpg') }}" class="d-block" alt="Taller 5">
+        </div>
+        <div class="carousel-item">
+            <a href="{{ url_for('ajedrez_competitivo') }}"></a>
+            <img src="{{ url_for('static', filename='img/ajedrez.jpg') }}" class="d-block" alt="Taller 6">
+        </div>
+        <div class="carousel-item">
+            <a href="{{ url_for('futbol7') }}"></a>
+            <img src="{{ url_for('static', filename='img/futbol7.jpg') }}" class="d-block" alt="Taller 7">
+        </div>
+        <div class="carousel-item">
+            <a href="{{ url_for('danza') }}"></a>
+            <img src="{{ url_for('static', filename='img/danza1.jpg') }}" class="d-block" alt="Taller 8">
+        </div>
+        <div class="carousel-item">
+            <a href="{{ url_for('ajedrez_recreativo') }}"></a>
+            <img src="{{ url_for('static', filename='img/aajedrez1.jpg') }}" class="d-block" alt="Taller 9">
+        </div>
+        <div class="carousel-item">
+            <a href="{{ url_for('beisbol') }}"></a>
+            <img src="{{ url_for('static', filename='img/.jpg') }}" class="d-block" alt="Taller 10">
+        </div>
+        <div class="carousel-item">
+            <a href="{{ url_for('porristas') }}"></a>
+            <img src="{{ url_for('static', filename='img/.jpg') }}" class="d-block" alt="Taller 11">
+        </div>
+        <div class="carousel-item">
+            <a href="{{ url_for('atletismo') }}"></a>
+            <img src="{{ url_for('static', filename='img/.jpg') }}" class="d-block" alt="Taller 12">
         </div>
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
@@ -57,34 +89,34 @@
     </button>
 </div>
 
-<!-- Pie de página -->
-<footer class="bg-success text-white text-center mt-5 py-4">
-    <div class="container">
-        <div class="row">
+
+<!-- 🟢 Pie de página -->
+<footer class="footer-personalizado text-white text-center mt-5 py-4">
+    <div class="container container-footer">
+        <div class="row mb-3">
             <div class="col-md-4">
                 <p><strong>Comunícate:</strong></p>
-                <p>correo@uttlax.edu.mx</p>
-                <p>WhatsApp: 246-123-4567</p>
+                <p>contacto@uttlaxcala.edu.mx</p>
+                <p>(247) 47-25-300</p>
                 <div>
-                    <a href="#"><img src="{{ url_for('static', filename='img/facebook.png') }}" width="24"></a>
-                    <a href="#"><img src="{{ url_for('static', filename='img/logotipo-de-instagram.png') }}" width="24"></a>
-                    <a href="#"><img src="{{ url_for('static', filename='img/gmail.png') }}" width="24"></a>
+                    <a href="https://www.facebook.com/share/1ZRmk4uYoG/"><img class="icono-footer" src="{{ url_for('static', filename='img/facebook.png') }}" width="24"></a>
+                    <a href="https://www.instagram.com/ut_tlaxcala?igsh=MWNpMjgyNmxvcjNodA=="><img class="icono-footer" src="{{ url_for('static', filename='img/logotipo-de-instagram.png') }}" width="24"></a>
+                    <a href="https://chat.whatsapp.com/IuDjMt9CBicDloHkIPTy5F"><img class="icono-footer" src="{{ url_for('static', filename='img/whatsapp.png') }}" width="24"></a>
                 </div>
             </div>
             <div class="col-md-4">
                 <p><strong>Horario de atención:</strong></p>
                 <p>Lunes a Viernes</p>
-                <p>8:00 am - 4:00 pm</p>
+                <p>09:00 - 17:00 hrs</p>
             </div>
             <div class="col-md-4">
                 <p><strong>Ubicación:</strong></p>
-                <p>Tlaxcala, México</p>
-            </div>
+                <a href="https://maps.app.goo.gl/Uj8eRuzkXFUboarS7">
+        <img src="static/img/mapa.png" alt="Mapa de ubicacion" width="200" height="100"></a>
         </div>
-        <p class="mt-3 mb-0">© 2025 Taller UTT - Todos los derechos reservados</p>
+        <p class="texto-copy mt-3 mb-0">© 2025 Taller UTT - Todos los derechos reservados</p>
     </div>
 </footer>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

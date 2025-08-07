@@ -4,11 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Editar Docente</title>
-    <link rel="stylesheet" href="/static/css/estilo.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- 🟢 Encabezado -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light px-4 py-3">
+    <img src="{{ url_for('static', filename='img/LOGO UTT.png') }}" alt="Logo UTT" height="150">
+    <div class="mx-auto text-center">
+        <h4 class="mb-0">Sistema de control y gestión de talleres UTT</h4>
+        <small class="text-muted">Universidad Tecnológica de Tlaxcala</small>
+    </div>
+</nav>
+<hr class="linea-negra">
+<br>
     <h2 class="titulo-formulario">Editar Docente</h2>
     <form method="POST" enctype="multipart/form-data">
         <div class="form-columns">
@@ -131,5 +141,32 @@
 
         document.getElementById("foto_credencialD").addEventListener("change", mostrarImagen);
     </script>
+    <!-- 🟢 Pie de página -->
+<footer class="footer-personalizado text-white text-center mt-5 py-4">
+    <div class="container container-footer">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <p><strong>Comunícate:</strong></p>
+                <p>contacto@uttlaxcala.edu.mx</p>
+                <p>(247) 47-25-300</p>
+                <div>
+                    <a href="https://www.facebook.com/share/1ZRmk4uYoG/"><img class="icono-footer" src="{{ url_for('static', filename='img/facebook.png') }}" width="24"></a>
+                    <a href="https://www.instagram.com/ut_tlaxcala?igsh=MWNpMjgyNmxvcjNodA=="><img class="icono-footer" src="{{ url_for('static', filename='img/logotipo-de-instagram.png') }}" width="24"></a>
+                    <a href="https://chat.whatsapp.com/IuDjMt9CBicDloHkIPTy5F"><img class="icono-footer" src="{{ url_for('static', filename='img/whatsapp.png') }}" width="24"></a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <p><strong>Horario de atención:</strong></p>
+                <p>Lunes a Viernes</p>
+                <p>09:00 - 17:00 hrs</p>
+            </div>
+            <div class="col-md-4">
+                <p><strong>Ubicación:</strong></p>
+                <a href="https://maps.app.goo.gl/Uj8eRuzkXFUboarS7">
+        <img src="static/img/mapa.png" alt="Mapa de ubicacion" width="200" height="100"></a>
+        </div>
+        <p class="texto-copy mt-3 mb-0">© 2025 Taller UTT - Todos los derechos reservados</p>
+    </div>
+</footer>
 </body>
 </html> 

@@ -4,11 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Registro Docente</title>
-    <link rel="stylesheet" href="/static/css/estilo.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
     </head>
     <body>
+        <!-- 🟢 Encabezado -->
+<header class="mi-header">
+    <img src="{{ url_for('static', filename='img/LOGO UTT.png') }}" alt="Logo UTT" height="150">
+    <div>
+    <center><h1>Sistema de control y gestión de talleres UTT</h1></center>
+    <center><p>Universidad Tecnológica de Tlaxcala</p></center>
+    </div>
+    </header>
+<hr class="linea-negra">
+<br>
         <h2 class="titulo-formulario">Registro docente taller</h2>
         <form action="/registroDocente" method="POST" enctype="multipart/form-data">
             <div class="form-columns">
@@ -98,5 +108,50 @@
                 <button type="submit" class="btn">Guardar registro</button>
             </div>
         </form>
+    <!-- 🟢 Pie de página -->
+<footer class="footer-personalizado text-white mt-5">
+    <div class="container container-footer">
+    <div class="row justify-content-between align-items-start">
+
+    <!-- Columna 1: Contacto -->
+    <div class="col-md-4 footer-col">
+        <p><strong>Comunícate:</strong></p>
+        <p>contacto@uttlaxcala.edu.mx</p>
+        <p>(247) 47-25-300</p>
+        <div class="social-icons mt-2">
+    <a href="https://www.facebook.com/share/1ZRmk4uYoG/">
+    <img class="icono-footer" src="{{ url_for('static', filename='img/facebook.png') }}" alt="Facebook" />
+    </a>
+    <a href="https://www.instagram.com/ut_tlaxcala?igsh=MWNpMjgyNmxvcjNodA==">
+    <img class="icono-footer" src="{{ url_for('static', filename='img/logotipo-de-instagram.png') }}" alt="Instagram" />
+    </a>
+    <a href="https://chat.whatsapp.com/IuDjMt9CBicDloHkIPTy5F">
+    <img class="icono-footer" src="{{ url_for('static', filename='img/whatsapp.png') }}" alt="WhatsApp" />
+    </a>
+    </div>
+    </div>
+
+    <!-- Columna 2: Horario -->
+    <div class="col-md-4 footer-col">
+        <p><strong>Horario de atención:</strong></p>
+        <p>Lunes a Viernes</p>
+        <p>09:00 - 17:00 hrs</p>
+    </div>
+
+    <!-- Columna 3: Ubicación -->
+    <div class="col-md-4 footer-col">
+        <p><strong>Ubicación:</strong></p>
+        <a href="https://maps.app.goo.gl/Uj8eRuzkXFUboarS7">
+    <img class="mapa-footer" src="{{ url_for('static', filename='img/mapa.png') }}" alt="Mapa de ubicación" />
+        </a>
+    </div>
+
+    </div>
+
+    <div class="text-center mt-4">
+        <p class="texto-copy mb-0">© 2025 Taller UTT - Todos los derechos reservados</p>
+    </div>
+    </div>
+</footer>
     </body>
 </html>

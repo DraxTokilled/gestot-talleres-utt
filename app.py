@@ -559,41 +559,53 @@ def logout():
     return redirect(url_for("login"))
 
 # Rutas a vistas de talleres
-@app.route('/taller')
-def taller():
-    return render_template('taller.html')
+@app.route('/futbol_soccer')
+def futbol_soccer():
+    return render_template('futbol_soccer.html')
 
-@app.route('/taller1')
-def taller1():
-    return render_template('taller1.html')
+@app.route('/basquetbol')
+def basquetbol():
+    return render_template('basquetbol.html')
 
-@app.route('/taller2')
-def taller2():
-    return render_template('taller2.html')
+@app.route('/voleibol')
+def voleibol():
+    return render_template('voleibol.html')
 
-@app.route('/taller3')
-def taller3():
-    return render_template('taller3.html')
+@app.route('/escolta')
+def escolta():
+    return render_template('escolta.html')
 
-@app.route('/taller4')
-def taller4():
-    return render_template('taller4.html')
+@app.route('/banda_guerra')
+def banda_guerra():
+    return render_template('banda_guerra.html')
 
-@app.route('/taller5')
-def taller5():
-    return render_template('taller5.html')
+@app.route('/ajedrez_competitivo')
+def ajedrez_competitivo():
+    return render_template('ajedrez_competitivo.html')
 
-@app.route('/taller6')
-def taller6():
-    return render_template('taller6.html')
+@app.route('/futbol7')
+def futbol7():
+    return render_template('futbol7.html')
 
-@app.route('/taller7')
-def taller7():
-    return render_template('taller7.html')
+@app.route('/danza')
+def danza():
+    return render_template('danza.html')
 
-@app.route('/taller8')
-def taller8():
-    return render_template('taller8.html')
+@app.route('/ajedrez_recreativo')
+def ajedrez_recreativo():
+    return render_template('ajedrez_recreativo.html')
+
+@app.route('/beisbol')
+def beisbol():
+    return render_template('beisbol.html')
+
+@app.route('/porristas')
+def porristas():
+    return render_template('porristas.html')
+
+@app.route('/atletismo')
+def atletismo():
+    return render_template('atletismo.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

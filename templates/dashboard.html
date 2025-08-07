@@ -14,7 +14,7 @@
             position: fixed;
             top: 0;
             left: -250px;
-            background-color: #198754;
+            background-color: #069E22;
             overflow-x: hidden;
             transition: 0.3s;
             padding-top: 60px;
@@ -31,7 +31,7 @@
         }
 
         #menuLateral a:hover {
-            background-color: #145c38;
+            background-color: #069E22;
         }
 
         /* Botón hamburguesa */
@@ -55,11 +55,16 @@
     </style>
 </head>
 <body class="bg-light">
-
-<nav class="navbar navbar-dark bg-success px-4 py-2">
+    <!-- 🟢 Encabezado -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light px-4 py-3">
+    <img src="{{ url_for('static', filename='img/LOGO UTT.png') }}" alt="Logo UTT" height="150">
+    <div class="mx-auto text-center">
+        <h4 class="mb-0">Sistema de control y gestión de talleres UTT</h4>
+        <small class="text-muted">Universidad Tecnológica de Tlaxcala</small>
+    </div>
+    <nav class="navbar navbar-dark bg-success px-4 py-2">
     <!-- Botón hamburguesa -->
     <button class="btn-hamburguesa" onclick="abrirMenu()">☰</button>
-    <span class="navbar-brand ms-3">Sistema Talleres UTT</span>
 </nav>
 
 <!-- Menú lateral oculto -->
@@ -75,6 +80,10 @@
     <a href="{{ url_for('consultar') }}">Consultas</a>
     <a href="{{ url_for('index') }}">Cerrar sesión</a>
 </div>
+</nav>
+<hr class="linea-negra">
+<br>
+
 
 <div class="container mt-5 text-center">
     <img src="{{ url_for('static', filename='img/usuario.png') }}" width="90" class="mb-3">
@@ -102,6 +111,32 @@
         document.getElementById("menuLateral").style.left = "-250px";
     }
 </script>
-
+<!-- 🟢 Pie de página -->
+<footer class="footer-personalizado text-white text-center mt-5 py-4">
+    <div class="container container-footer">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <p><strong>Comunícate:</strong></p>
+                <p>contacto@uttlaxcala.edu.mx</p>
+                <p>(247) 47-25-300</p>
+                <div>
+                    <a href="https://www.facebook.com/share/1ZRmk4uYoG/"><img class="icono-footer" src="{{ url_for('static', filename='img/facebook.png') }}" width="24"></a>
+                    <a href="https://www.instagram.com/ut_tlaxcala?igsh=MWNpMjgyNmxvcjNodA=="><img class="icono-footer" src="{{ url_for('static', filename='img/logotipo-de-instagram.png') }}" width="24"></a>
+                    <a href="https://chat.whatsapp.com/IuDjMt9CBicDloHkIPTy5F"><img class="icono-footer" src="{{ url_for('static', filename='img/whatsapp.png') }}" width="24"></a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <p><strong>Horario de atención:</strong></p>
+                <p>Lunes a Viernes</p>
+                <p>09:00 - 17:00 hrs</p>
+            </div>
+            <div class="col-md-4">
+                <p><strong>Ubicación:</strong></p>
+                <a href="https://maps.app.goo.gl/Uj8eRuzkXFUboarS7">
+        <img src="static/img/mapa.png" alt="Mapa de ubicacion" width="200" height="100"></a>
+        </div>
+        <p class="texto-copy mt-3 mb-0">© 2025 Taller UTT - Todos los derechos reservados</p>
+    </div>
+</footer>
 </body>
 </html>
