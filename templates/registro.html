@@ -99,29 +99,29 @@
                     <div class="error-message">{{ errors['correo'] }}</div>
                 {% endif %}
         </div>
+        <!-- Taller y horario -->
         <div class="mb-3">
-        <label for="taller_inscripcion">Taller Inscripción</label>
-        <select id="taller_inscripcion" name="taller_inscripcion" required>
-          <option value="seleccionaT">Selecciona un taller</option>
-          <option value="voleibol">Voleibol</option>
-          <option value="futbol7">Futbol 7</option>
-          <option value="futbolS">Futbol Soccer</option>
-          <option value="escolta">Escolta</option>
-          <option value="beisbol">Beisbol</option>
-          <option value="atletismo">Atletismo</option>
-          <option value="basquetbol">Basquetbol</option>
-          <option value="ajedrezC">Ajedrez Competitivo</option>
-          <option value="ajedrezR">Ajedrez Recreativo</option>
-          <option value="danza">Danza</option>
-          <option value="porristas">Porristas</option>
-          <option value="banda_guerra">Banda de guerra</option>
-        </select>
-      </div>
-        <div class="mb-3">
-          <label for="horario">Horario</label>
-          <select id="horario" name="horario" required>
-            <option value="">Selecciona un horario</option>
+          <label for="taller_inscripcion">Taller Inscrito</label>
+          <select id="taller_inscripcion" name="taller_inscripcion" required onchange="actualizarHorarios()">
+            <option value="">Selecciona un taller</option>
+            {% for nombre in talleres.keys() %}
+              <option value="{{ nombre }}" {% if form_data.Taller_Inscripcion == nombre %}selected{% endif %}>{{ nombre }}</option>
+            {% endfor %}
           </select>
+        </div>
+        <div class="mb-3">
+          <label for="horario">Horario Disponible</label>
+          <select id="horario" name="horario" required>
+            {% if form_data.horario %}
+              <option selected>{{ form_data.horario }}</option>
+            {% else %}
+              <option value="">Selecciona un horario</option>
+            {% endif %}
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="fecha_inscripcion">Fecha de inscripción al taller</label>
+          <input type="date" id="fecha_inscripcion" name="fecha_inscripcion" value="{{ form_data.get('fecha_inscripcion', '') }}" required>
         </div>
         <div class="mb-3">
           <label for="contrasena">Contraseña</label>
@@ -149,36 +149,48 @@
     </div>
   </form>
 
-  <script>
-    const horariosPorTaller = {
-      voleibol: ["Martes 14:00-17:00", "Jueves 14:00-16:00"],
-      futbol7: ["Lunes 14:00-17:00"],
-      futbolS: ["Martes 15:00-17:00", "Jueves 15:00-17:00"],
-      escolta: ["Martes 14:00-15:00", "Jueves 14:00-15:00"],
-      beisbol: ["Miércoles 14:00-16:00"],
-      atletismo: ["Lunes 16:00-17:00", "Martes 16:00-17:00"],
-      basquetbol: ["Lunes 13:00-16:00", "Martes 13:00-16:00"],
-      ajedrezC: ["Miércoles 14:00-17:00"],
-      ajedrezR: ["Martes 14:00-17:00", "Jueves 14:00-17:00"],
-      danza: ["Martes 13:00-14:30", "Viernes 13:00-14:30"],
-      porristas: ["Martes 14:30-16:00", "Viernes 14:30-16:00"],
-      banda_guerra: ["Miércoles 14:00-17:00", "Viernes 14:00-17:00"]
-    };
+{% if talleres %}
+<script>
+  const talleres = {{ talleres | tojson | safe }};
 
-    document.getElementById('taller_inscripcion').addEventListener('change', function () {
-      const taller = this.value;
-      const horarioSelect = document.getElementById('horario');
+  function actualizarHorarios() {
+    const tallerSelect = document.getElementById("taller_inscripcion");
+    const horarioSelect = document.getElementById("horario");
+    const tallerSeleccionado = tallerSelect.value;
+
+    horarioSelect.innerHTML = "";
+
+    if (tallerSeleccionado && talleres[tallerSeleccionado]) {
+      const horarios = talleres[tallerSeleccionado];
+      const opciones = Object.entries(horarios).map(([dia, rango]) => {
+        return `<option value="${dia}: ${rango}">${dia}: ${rango}</option>`;
+      });
+      horarioSelect.innerHTML = opciones.join("");
+    } else {
       horarioSelect.innerHTML = '<option value="">Selecciona un horario</option>';
-      if (horariosPorTaller[taller]) {
-        horariosPorTaller[taller].forEach(horario => {
-          const option = document.createElement('option');
-          option.value = horario;
-          option.textContent = horario;
-          horarioSelect.appendChild(option);
-        });
-      }
-    });
-  </script>
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", actualizarHorarios);
+</script>
+{% endif %}
+
+{% if session.get("registro_error") %}
+<div id="custom-alert" class="custom-alert error">
+  <div class="custom-alert-content">
+    <span class="close-btn" onclick="cerrarAlerta()">×</span>
+    <h3>Advertencia</h3>
+    <p>Error al registrar el alumno</p>
+  </div>
+</div>
+<script>
+  function cerrarAlerta() {
+    document.getElementById("custom-alert").style.display = "none";
+  }
+  setTimeout(cerrarAlerta, 4000);
+</script>
+{% set _ = session.pop("registro_error") %}
+{% endif %}
 <!-- 🟢 Pie de página -->
 <footer class="footer-personalizado text-white mt-5">
   <div class="container container-footer">

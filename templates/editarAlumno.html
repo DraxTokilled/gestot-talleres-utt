@@ -60,21 +60,24 @@
             <option disabled {% if not datos.Genero %}selected{% endif %}>Selecciona un género</option>
             {% for g in ['H', 'M', 'LGBTQ'] %}
               <option value="{{ g }}" {% if datos.Genero == g %}selected{% endif %}>
-              {% if g == 'H' %}Hombre{% elif g == 'M' %}Mujer{% else %}LGBTQ+{% endif %}
+                {% if g == 'H' %}Hombre{% elif g == 'M' %}Mujer{% else %}LGBTQ+{% endif %}
               </option>
             {% endfor %}
           </select>
         </div>
+
         <!-- Edad -->
         <div class="mb-3">
           <label for="edad">Edad</label>
           <input type="number" id="edad" name="edad" value="{{ datos.Edad }}" required />
         </div>
-        <!-- NSS-->
+
+        <!-- NSS -->
         <div class="mb-3">
           <label for="nss">NSS</label>
           <input type="text" id="nss" name="nss" value="{{ datos.NSS }}" readonly />
         </div>
+
         <!-- Grado y Grupo -->
         <div class="mb-3">
           <label for="grado_grupo">Grado y Grupo</label>
@@ -102,22 +105,20 @@
           <input type="text" id="telefono_emergencia" name="telefono_emergencia" value="{{ datos.Telefono_Emergencia }}" required />
         </div>
 
-        <!--Correo-->
+        <!-- Correo -->
         <div class="mb-3">
           <label for="correo">Correo Electrónico</label>
           <input type="email" id="correo" name="correo" value="{{ datos.Correo }}" readonly />
         </div>
+
         <!-- Taller Inscripción -->
         <div class="mb-3">
           <label for="taller_inscripcion">Taller Inscripción</label>
           <select id="taller_inscripcion" name="taller_inscripcion" required>
             <option value="">Selecciona un taller</option>
-            {% for taller in [
-              'voleibol', 'futbol7', 'futbolS', 'escolta', 'beisbol', 'atletismo',
-              'basquetbol', 'ajedrezC', 'ajedrezR', 'danza', 'porristas', 'banda_guerra'
-            ] %}
-              <option value="{{ taller }}" {% if datos.Taller_Inscripcion == taller %}selected{% endif %}>
-                {{ taller|capitalize }}
+            {% for nombre in talleres.keys() %}
+              <option value="{{ nombre|lower }}" {% if datos.Taller_Inscripcion == nombre|lower %}selected{% endif %}>
+                {{ nombre|capitalize }}
               </option>
             {% endfor %}
           </select>
@@ -127,11 +128,16 @@
         <div class="mb-3">
           <label for="horario">Horario</label>
           <select name="horario" id="horario" required>
-            <option disabled selected>Selecciona un horario</option>
-            {% for h in datos.horarios_disponibles %}
-              <option value="{{ h }}" {% if h == datos.Horario %}selected{% endif %}>{{ h }}</option>
-            {% endfor %}
+            <option value="">Selecciona un horario</option>
           </select>
+        </div>
+
+
+        <!-- Fecha de inscripción -->
+        <div class="mb-3">
+          <label for="fecha_inscripcion">Fecha de inscripción al taller</label>
+          <input type="date" id="fecha_inscripcion" name="fecha_inscripcion"
+                value="{{ datos.Fecha_Inscripcion }}" required />
         </div>
 
         <!-- Imagen de credencial -->
@@ -141,19 +147,18 @@
 
           <!-- Mostrar imagen actual -->
           <div class="mb-3" style="text-align: center;">
-          <label for="foto_actual" style="display: block; text-align: center;">Foto actual:</label>
-          <div style="width: 200px; margin: 0 auto;">
-            {% if datos.Foto_Credencial %}
-              <img id="foto_actual"
-                  src="{{ url_for('static', filename='fotos/' + datos.Foto_Credencial) }}"
-                  alt="Foto de credencial"
-                  style="width: 100%; height: auto; border: 1px solid #ccc; border-radius: 8px;">
-            {% else %}
-              <p>No se ha subido ninguna foto aún.</p>
-            {% endif %}
+            <label for="foto_actual" style="display: block; text-align: center;">Foto actual:</label>
+            <div style="width: 200px; margin: 0 auto;">
+              {% if datos.Foto_Credencial %}
+                <img id="foto_actual"
+                    src="{{ url_for('static', filename='fotos/' + datos.Foto_Credencial) }}"
+                    alt="Foto de credencial"
+                    style="width: 100%; height: auto; border: 1px solid #ccc; border-radius: 8px;">
+              {% else %}
+                <p>No se ha subido ninguna foto aún.</p>
+              {% endif %}
+            </div>
           </div>
-        </div>
-
 
           <!-- Previsualización de la nueva imagen -->
           <div id="previsualizacion" class="mt-2" style="display: none;">
@@ -163,11 +168,14 @@
         </div>
       </div>
     </div>
+
     <!-- Botón -->
     <div class="button-container">
       <button type="submit" class="btn">Guardar cambios</button>
     </div>
   </form>
+
+  <!-- Scripts -->
   <script>
     function mostrarImagen(event) {
       const archivo = event.target.files[0];
@@ -185,6 +193,43 @@
 
     document.getElementById("foto_credencial").addEventListener("change", mostrarImagen);
   </script>
+
+  {% if talleres %}
+  <script>
+    const talleres = {{ talleres | tojson | safe }};
+
+    function actualizarHorarios() {
+      const tallerSelect = document.getElementById("taller_inscripcion");
+      const horarioSelect = document.getElementById("horario");
+      const tallerSeleccionado = tallerSelect.value.toLowerCase();
+
+      horarioSelect.innerHTML = "";
+
+      if (tallerSeleccionado && talleres[tallerSeleccionado]) {
+        const horarios = talleres[tallerSeleccionado];
+        if (horarios.length > 0) {
+          const opciones = horarios.map(h => `<option value="${h}">${h}</option>`);
+          horarioSelect.innerHTML = opciones.join("");
+
+          const horarioActual = "{{ datos.Horario }}";
+          for (const option of horarioSelect.options) {
+            if (option.value === horarioActual) {
+              option.selected = true;
+              break;
+            }
+          }
+        } else {
+          horarioSelect.innerHTML = '<option value="">No hay horarios disponibles</option>';
+        }
+      } else {
+        horarioSelect.innerHTML = '<option value="">Selecciona un horario</option>';
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", actualizarHorarios);
+    document.getElementById("taller_inscripcion").addEventListener("change", actualizarHorarios);
+  </script>
+  {% endif %}
   <!-- 🟢 Pie de página -->
 <footer class="footer-personalizado text-white text-center mt-5 py-4">
     <div class="container container-footer">

@@ -31,7 +31,7 @@ def login():
         password = request.form["password"]
 
         cursor = mysql.connection.cursor()
-        cursor.execute("SELECT * FROM estudiante WHERE Correo = %s AND Contraseña = %s", (email, password))
+        cursor.execute("SELECT * FROM administrador WHERE correo_A = %s AND contraseña = %s", (email, password))
         user = cursor.fetchone()
         cursor.close()
 
@@ -96,14 +96,15 @@ def consultar():
 
 
 
-#Registro Taller
+# Ruta para registrar taller
 @app.route("/registroTaller", methods=["GET", "POST"])
 def registroTaller():
     errors = {}
 
     if request.method == "POST":
+        # Recolección de datos del formulario
         Nombre_T = request.form.get('Nombre_T')
-        Nombre_D = request.form["Nombre_D"]
+        Nombre_D = request.form.get("Nombre_D")
         dias_t = request.form.getlist("dias_t[]")  # lista de días
         dias_unidos = ",".join(dias_t)  # ejemplo: "Lunes,Miércoles,Viernes"
 
@@ -116,15 +117,25 @@ def registroTaller():
                 horarios[dia] = f"{inicio}-{fin}"
 
         estatus = request.form.get('estatus')
-        # Validaciones
+
+        # Validación: Taller ya existe
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT * FROM taller WHERE Nombre_T = %s", (Nombre_T,))
         if cursor.fetchone():
             errors['Nombre_T'] = "El taller ya está registrado."
 
+        # Validaciones adicionales
+        if not Nombre_T:
+            errors['Nombre_T'] = "El nombre del taller es obligatorio."
+        if not Nombre_D:
+            errors['Nombre_D'] = "El nombre del docente es obligatorio."
+        if not estatus:
+            errors['estatus'] = "El estatus es obligatorio."
+
         if errors:
+            # Devuelve formulario con errores y datos previos
             return render_template("registroTaller.html", errors=errors, form_data=request.form)
-        
+
         # Insertar en la base de datos
         cursor.execute("""
             INSERT INTO taller (
@@ -136,162 +147,183 @@ def registroTaller():
         mysql.connection.commit()
         cursor.close()
 
-        return redirect(url_for("login"))
-    return render_template('registroTaller.html', form_data={})
-
-@app.route("/editarTaller/<int:idTaller>", methods=["GET", "POST"])
-def editarTaller(idTaller):
-    cursor = mysql.connection.cursor()
-
-    # Buscar taller por ID
-    cursor.execute("SELECT * FROM taller WHERE Id_Taller = %s", (idTaller,))
-    taller = cursor.fetchone()
-
-    if not taller:
-        cursor.close()
-        return "Taller no encontrado", 404
-
-    # Mapear resultados a diccionario
-    columnas = [desc[0] for desc in cursor.description]
-    datos = dict(zip(columnas, taller))
-    cursor.close()
-
-    # Normalizar valores para renderizar HTML correctamente
-    estatus_original = datos["Estatus"] if datos["Estatus"] is not None else ""
-    estado = ""
-    if estatus_original.lower().startswith("a"):  # Activo
-        estado = "A"
-    elif estatus_original.lower().startswith("b"):  # Baja
-        estado = "B"
-    else:
-        estado = "BT"  # Baja temporal
-
-    datos["Estatus"] = estado
-
-    # Convertir los días seleccionados en una lista
-    dias_seleccionados = datos.get("Dias_Taller", "").split(',') if datos.get("Dias_Taller") else []
-    
-    # Convertir los horarios
-    horarios = {}
-    for dia in dias_seleccionados:
-        horarios[dia] = {
-            'inicio': datos.get(f'Horario_{dia}_inicio', ''),
-            'fin': datos.get(f'Horario_{dia}_fin', '')
+        session["alerta"] = {
+            "tipo": "success",  # o "error"
+            "titulo": "Registro exitoso",
+            "mensaje": "El taller fue registrado correctamente."
         }
+        return redirect(url_for("dashboard"))  # Cambia esta redirección según lo que necesites
 
-    if request.method == "POST":
-        # Obtener datos del formulario
-        nombre_T = request.form["nombre_T"]
-        nombre_D = request.form["nombre_D"]
-        dias_t = request.form.getlist("dias_t[]")
-        estado = request.form["estado"]
-        
-        # Crear diccionario de horarios
+    return render_template("registroTaller.html", form_data={})
+
+# Editar Taller
+@app.route('/editarTaller/<int:id_taller>', methods=['GET', 'POST'])
+def editarTaller(id_taller):
+    if request.method == 'POST':
+        nombre_t = request.form['nombre_t']
+        nombre_docente = request.form['nombre_docente']
+        dias_taller = request.form.getlist('dias_t[]')
+        estatus = request.form['estatus']
+
+        # Construir horarios desde los inputs
         horarios = {}
-        for dia in dias_t:
-            horarios[dia] = {
-                'inicio': request.form[f'horario_{dia}_inicio'],
-                'fin': request.form[f'horario_{dia}_fin']
-            }
+        for dia in dias_taller:
+            inicio = request.form.get(f'horario_{dia}_inicio')
+            fin = request.form.get(f'horario_{dia}_fin')
+            if inicio and fin:
+                horarios[dia] = f"{inicio}-{fin}"
 
-        # Actualizar datos del taller en la base de datos
-        cursor = mysql.connection.cursor()
-
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor) 
         cursor.execute("""
             UPDATE taller
-            SET Nombre_T=%s, Nombre_D=%s, Dias_T=%s, Estatus=%s
-            WHERE Id_Taller=%s
+            SET Nombre_T=%s, Nombre_D=%s, Dias_T=%s, Horarios=%s, Estatus=%s
+            WHERE id_taller=%s
         """, (
-            nombre_T, nombre_D, ','.join(dias_t), estado, idTaller
+            nombre_t,
+            nombre_docente,
+            json.dumps(dias_taller),
+            json.dumps(horarios),
+            estatus,
+            id_taller
         ))
-
-        # Actualizar horarios dinámicamente
-        for dia, horario in horarios.items():
-            cursor.execute(f"""
-                UPDATE taller
-                SET Horario_{dia}_inicio=%s, Horario_{dia}_fin=%s
-                WHERE Id_Taller=%s
-            """, (horario['inicio'], horario['fin'], idTaller))
-
         mysql.connection.commit()
         cursor.close()
+        session["alerta"] = {
+            "tipo": "success",
+            "titulo": "Cambios guardados",
+            "mensaje": "Los datos del taller fueron actualizados correctamente."
+        }
+        return redirect(url_for("dashboard"))
 
-        return redirect(url_for("dashboard"))  # Cambia según tu vista de destino
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)  
+    cursor.execute("SELECT * FROM taller WHERE id_taller=%s", (id_taller,))
+    taller = cursor.fetchone()
+    cursor.close()
 
-    return render_template("editarTaller.html", datos=datos, dias_seleccionados=dias_seleccionados, horarios=horarios)
+    if not taller:
+        flash("Taller no encontrado", "danger")
+        return redirect(url_for('dashboard'))
+
+    # Convertir Horarios a diccionario para el template
+    horarios_raw = taller.get('Horarios')
+    if horarios_raw:
+        try:
+            taller['Horarios'] = json.loads(horarios_raw)
+        except json.JSONDecodeError:
+            taller['Horarios'] = {}
+    else:
+        taller['Horarios'] = {}
+
+    # Convertir Dias_T a lista para el template
+    dias_raw = taller.get('Dias_T')
+    if dias_raw:
+        try:
+            taller['Dias_T'] = json.loads(dias_raw)
+        except json.JSONDecodeError:
+            taller['Dias_T'] = []
+    else:
+        taller['Dias_T'] = []
+
+    return render_template('editarTaller.html', taller=taller)
+
+
 # Registro Alumno
 @app.route("/registro", methods=["GET", "POST"])
 def registro():
     errors = {}
+    cursor = mysql.connection.cursor()
+
+    # Obtener talleres activos con sus horarios
+    cursor.execute("SELECT Nombre_T, Horarios FROM taller WHERE Estatus = 'A'")
+    talleres = cursor.fetchall()
+
+    talleres_dict = {}
+    for nombre, horarios in talleres:
+        try:
+            talleres_dict[nombre] = json.loads(horarios) if horarios else {}
+        except json.JSONDecodeError:
+            talleres_dict[nombre] = {}
 
     if request.method == "POST":
-        matricula = request.form["matricula"]
-        nombre = request.form["nombre"]
-        apellido_p = request.form["apellido_p"]
-        apellido_m = request.form["apellido_m"]
-        carrera = request.form['carrera']
-        genero = request.form["genero"]
-        edad = request.form["edad"]
-        nss = request.form["nss"]
-        grado_grupo = request.form["grado_grupo"]
-        telefono = request.form["telefono"]
-        tutor = request.form["tutor"]
-        telefono_emergencia = request.form["telefono_emergencia"]
-        correo = request.form["correo"]
-        taller_inscripcion = request.form["taller_inscripcion"]
-        horario = request.form["horario"]
-        contrasena = request.form["contrasena"]
-        confirmar = request.form["confirmar"]
+        form = request.form
+        matricula = form["matricula"]
+        nombre = form["nombre"]
+        apellido_p = form["apellido_p"]
+        apellido_m = form["apellido_m"]
+        carrera = form["carrera"]
+        genero = form["genero"]
+        edad = form["edad"]
+        nss = form["nss"]
+        grado_grupo = form["grado_grupo"]
+        telefono = form["telefono"]
+        tutor = form["tutor"]
+        telefono_emergencia = form["telefono_emergencia"]
+        correo = form["correo"]
+        taller_inscripcion = form["taller_inscripcion"]
+        horario = form["horario"]
+        fecha_inscripcion = form.get("fecha_inscripcion")
+        contrasena = form["contrasena"]
+        confirmar = form["confirmar"]
         foto = request.files["foto_credencial"]
 
         # Validaciones
         if contrasena != confirmar:
-            errors['contrasena'] = "Las contraseñas no coinciden."
+            errors["contrasena"] = "Las contraseñas no coinciden."
 
-        cursor = mysql.connection.cursor()
+        if cursor.execute("SELECT 1 FROM estudiante WHERE Correo = %s", (correo,)) and cursor.fetchone():
+            errors["correo"] = "El correo ya está registrado."
 
-        cursor.execute("SELECT * FROM estudiante WHERE Correo = %s", (correo,))
-        if cursor.fetchone():
-            errors['correo'] = "El correo ya está registrado."
+        if cursor.execute("SELECT 1 FROM estudiante WHERE Matricula = %s", (matricula,)) and cursor.fetchone():
+            errors["matricula"] = "La matrícula ya está registrada."
 
-        cursor.execute("SELECT * FROM estudiante WHERE Matricula = %s", (matricula,))
-        if cursor.fetchone():
-            errors['matricula'] = "La matrícula ya está registrada."
+        if cursor.execute("SELECT 1 FROM estudiante WHERE NSS = %s", (nss,)) and cursor.fetchone():
+            errors["nss"] = "El NSS ya está registrado."
 
-        cursor.execute("SELECT * FROM estudiante WHERE NSS = %s", (nss,))
-        if cursor.fetchone():
-            errors['nss'] = "El NSS ya está registrado."
+        # Validar fecha
+        try:
+            fecha_inscripcion_dt = datetime.strptime(fecha_inscripcion, "%Y-%m-%d")
+        except (ValueError, TypeError):
+            errors["fecha_inscripcion"] = "Fecha de inscripción inválida."
 
         if errors:
-            return render_template("registro.html", errors=errors, form_data=request.form)
+            cursor.close()
+            return render_template("registro.html", errors=errors, form_data=form, talleres=talleres_dict)
 
-        # Guardar imagen si existe
-        if foto and foto.filename != '':
+        # Guardar imagen
+        ruta_foto = None
+        if foto and foto.filename:
             carpeta_fotos = os.path.join("static", "fotos")
             os.makedirs(carpeta_fotos, exist_ok=True)
             ruta_foto = secure_filename(foto.filename)
             foto.save(os.path.join(carpeta_fotos, ruta_foto))
-        else:
-            ruta_foto = None
 
         # Insertar en la base de datos
         cursor.execute("""
             INSERT INTO estudiante (
-                Matricula, Nombre, Apellido_P, Apellido_M, Carrera, Genero, Edad, 
-                NSS, Grado_Grupo, Telefono, Tutor, Telefono_Emergencia, Correo, Taller_Inscripcion, 
-                Horario, Contraseña, Foto_Credencial
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                Matricula, Nombre, Apellido_P, Apellido_M, Carrera, Genero, Edad,
+                NSS, Grado_Grupo, Telefono, Tutor, Telefono_Emergencia, Correo,
+                Taller_Inscripcion, Horario, Fecha_Inscripcion, Contraseña, Foto_Credencial
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (
-            matricula, nombre, apellido_p, apellido_m, carrera, genero, edad, nss, grado_grupo,
-            telefono, tutor, telefono_emergencia, correo, taller_inscripcion, horario, contrasena,
-            ruta_foto
+            matricula, nombre, apellido_p, apellido_m, carrera, genero, edad,
+            nss, grado_grupo, telefono, tutor, telefono_emergencia, correo,
+            taller_inscripcion, horario, fecha_inscripcion_dt.strftime("%Y-%m-%d"),
+            contrasena, ruta_foto
         ))
+
 
         mysql.connection.commit()
         cursor.close()
 
-        return redirect(url_for("login"))
-    return render_template('registro.html', form_data={})
+        session["alerta"] = {
+            "tipo": "success",  # o "error"
+            "titulo": "Registro exitoso",
+            "mensaje": "El alumno fue registrado correctamente."
+        }
+        return redirect(url_for("dashboard"))
+    return render_template("registro.html", form_data={}, talleres=talleres_dict)
+
+
 # Editar Alumno
 @app.route("/editarAlumno/<matricula>", methods=["GET", "POST"])
 def editar(matricula):
@@ -310,37 +342,46 @@ def editar(matricula):
     datos = dict(zip(columnas, alumno))
     cursor.close()
 
-    # Horarios disponibles por taller
-    horarios_taller = {
-        'voleibol': ["Martes 14:00-17:00", "Jueves 14:00-16:00"],
-        'futbol7': ["Lunes 14:00-17:00"],
-        'futbolS': ["Martes 15:00-17:00", "Jueves 15:00-17:00"],
-        'escolta': ["Martes 14:00-15:00", "Jueves 14:00-15:00"],
-        'beisbol': ["Miércoles 14:00-16:00"],
-        'atletismo': ["Lunes 16:00-17:00", "Martes 16:00-17:00"],
-        'basquetbol': ["Lunes 13:00-16:00", "Martes 13:00-16:00"],
-        'ajedrezC': ["Miércoles 14:00-17:00"],
-        'ajedrezR': ["Martes 14:00-17:00", "Jueves 14:00-17:00"],
-        'danza': ["Martes 13:00-14:30", "Viernes 13:00-14:30"],
-        'porristas': ["Martes 14:30-16:00", "Viernes 14:30-16:00"],
-        'banda_guerra': ["Miércoles 14:00-17:00", "Viernes 14:00-17:00"]
-    }
+    # Obtener talleres activos con sus horarios desde la base de datos
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT Nombre_T, Horarios FROM taller WHERE Estatus = 'A'")
+    talleres = cursor.fetchall()
+    cursor.close()
+
+    talleres_dict = {}
+    for nombre, horarios in talleres:
+        try:
+            if horarios:
+                horarios_dict = json.loads(horarios)
+                # Convertir {"Martes": "12:00-19:00"} → ["Martes 12:00-19:00"]
+                horarios_lista = [f"{dia} {hora}" for dia, hora in horarios_dict.items()]
+                talleres_dict[nombre.strip().lower()] = horarios_lista
+            else:
+                talleres_dict[nombre.strip().lower()] = []
+        except json.JSONDecodeError:
+            talleres_dict[nombre.strip().lower()] = []
+
 
     # Normalizar valores para renderizar HTML correctamente
     genero_original = datos["Genero"]
     genero = ""
-    if genero_original.lower().startswith("h"):  # Hombre
+    if genero_original.lower().startswith("h"):
         genero = "H"
-    elif genero_original.lower().startswith("m"):  # Mujer
+    elif genero_original.lower().startswith("m"):
         genero = "M"
     else:
         genero = "LGBTQ"
 
     datos["Genero"] = genero
-
     datos["Taller_Inscripcion"] = datos.get("Taller_Inscripcion", "").strip().lower()
     datos["Horario"] = datos.get("Horario", "").strip()
-    datos["horarios_disponibles"] = horarios_taller.get(datos["Taller_Inscripcion"], [])
+
+    # Formatear fecha para el input date
+    if datos.get("Fecha_Inscripcion"):
+        try:
+            datos["Fecha_Inscripcion"] = datos["Fecha_Inscripcion"].strftime("%Y-%m-%d")
+        except Exception:
+            datos["Fecha_Inscripcion"] = str(datos["Fecha_Inscripcion"])
 
     if request.method == "POST":
         # Obtener datos del formulario
@@ -354,8 +395,9 @@ def editar(matricula):
         telefono = request.form["telefono"]
         tutor = request.form["tutor"]
         telefono_emergencia = request.form["telefono_emergencia"]
-        taller_inscripcion = request.form["taller_inscripcion"]
+        taller_inscripcion = request.form["taller_inscripcion"].strip().lower()
         horario = request.form["horario"]
+        fecha_inscripcion = request.form["fecha_inscripcion"]
         foto = request.files["foto_credencial"]
 
         cursor = mysql.connection.cursor()
@@ -365,12 +407,12 @@ def editar(matricula):
             UPDATE estudiante
             SET Nombre=%s, Apellido_P=%s, Apellido_M=%s, Carrera=%s, Genero=%s, Edad=%s,
                 Grado_Grupo=%s, Telefono=%s, Tutor=%s, Telefono_Emergencia=%s,
-                Taller_Inscripcion=%s, Horario=%s
+                Taller_Inscripcion=%s, Horario=%s, Fecha_Inscripcion=%s
             WHERE Matricula=%s
         """, (
             nombre, apellido_p, apellido_m, carrera, genero, edad,
             grado_grupo, telefono, tutor, telefono_emergencia,
-            taller_inscripcion, horario, matricula
+            taller_inscripcion, horario, fecha_inscripcion, matricula
         ))
 
         # Ruta para guardar las fotos
@@ -378,39 +420,48 @@ def editar(matricula):
         os.makedirs(carpeta_fotos, exist_ok=True)
 
         # Verificar si se subió una nueva foto
-        if 'foto_credencial' in request.files:
-            foto = request.files['foto_credencial']
-            if foto and allowed_file(foto.filename):
-                # Nombre único para la nueva imagen
-                ruta_foto = f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{secure_filename(foto.filename)}"
-                foto.save(os.path.join(carpeta_fotos, ruta_foto))
+        if foto and allowed_file(foto.filename):
+            ruta_foto = f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{secure_filename(foto.filename)}"
+            foto.save(os.path.join(carpeta_fotos, ruta_foto))
 
-                # Eliminar foto anterior si existe
-                if datos.get("Foto_Credencial"):
-                    ruta_antigua = os.path.join(carpeta_fotos, datos["Foto_Credencial"])
-                    if os.path.exists(ruta_antigua):
-                        os.remove(ruta_antigua)
+            # Eliminar foto anterior si existe
+            if datos.get("Foto_Credencial"):
+                ruta_antigua = os.path.join(carpeta_fotos, datos["Foto_Credencial"])
+                if os.path.exists(ruta_antigua):
+                    os.remove(ruta_antigua)
 
-                # Actualizar en base de datos
-                cursor.execute(
-                    "UPDATE estudiante SET Foto_Credencial=%s WHERE Matricula=%s",
-                    (ruta_foto, matricula)
-                )
-                flash("Foto de credencial actualizada con éxito.")
-            elif foto.filename != '':
-                flash("Archivo no permitido. Usa una imagen PNG, JPG, JPEG o GIF.")
+            # Actualizar en base de datos
+            cursor.execute(
+                "UPDATE estudiante SET Foto_Credencial=%s WHERE Matricula=%s",
+                (ruta_foto, matricula)
+            )
+            flash("Foto de credencial actualizada con éxito.")
+        elif foto.filename != '':
+            flash("Archivo no permitido. Usa una imagen PNG, JPG, JPEG o GIF.")
 
         mysql.connection.commit()
         cursor.close()
 
+        session["alerta"] = {
+            "tipo": "success",
+            "titulo": "Cambios guardados",
+            "mensaje": "Los datos del alumno fueron actualizados correctamente."
+        }
         return redirect(url_for("dashboard"))
+    
+    return render_template("editarAlumno.html", datos=datos, talleres=talleres_dict)
 
-    return render_template("editarAlumno.html", datos=datos)
 
 #Registro Docente
 @app.route("/registroDocente", methods=["GET", "POST"])
 def registroDocente():
     errors = {}
+
+    # Obtener talleres activos desde la base de datos
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT Nombre_T FROM taller WHERE Estatus = 'A'")
+    talleres = cursor.fetchall()
+    talleres_lista = [nombre.strip().lower() for (nombre,) in talleres]
 
     if request.method == "POST":
         matriculaD = request.form["matriculaD"]
@@ -420,10 +471,10 @@ def registroDocente():
         correo_D = request.form["correo_D"]
         cedula_profesional = request.form["cedula_profesional"]
         taller_impartir = request.form["taller_impartir"]
+        estatus = request.form["estatus"]
         foto = request.files["foto_credencialD"]
 
         # Validaciones
-        cursor = mysql.connection.cursor()
         cursor.execute("SELECT * FROM docentes WHERE Correo_D = %s", (correo_D,))
         if cursor.fetchone():
             errors['correo_D'] = "El correo ya está registrado."
@@ -437,7 +488,8 @@ def registroDocente():
             errors['cedula_profesional'] = "La cédula ya está registrada."
 
         if errors:
-            return render_template("registroDocentes.html", errors=errors, form_data=request.form)
+            cursor.close()
+            return render_template("registroDocente.html", errors=errors, form_data=request.form, talleres=talleres_lista)
 
         # Guardar imagen si existe
         if foto and foto.filename != '':
@@ -451,19 +503,24 @@ def registroDocente():
         # Insertar en la base de datos
         cursor.execute("""
             INSERT INTO docentes (
-                Matricula_Docente, Nombre_D, Apellido_P_D, Apellido_M_D, Correo_D, Cedula_P_D, Taller_Impartir, 
-                Foto_CredencialD
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                Matricula_Docente, Nombre_D, Apellido_P_D, Apellido_M_D, Correo_D, Cedula_P_D,
+                Taller_Impartir, Estatus, Foto_CredencialD
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (
-            matriculaD, nombreD, apellido_p_D, apellido_m_D, correo_D, cedula_profesional, taller_impartir,
-            ruta_foto
+            matriculaD, nombreD, apellido_p_D, apellido_m_D, correo_D, cedula_profesional,
+            taller_impartir, estatus, ruta_foto
         ))
 
         mysql.connection.commit()
         cursor.close()
 
-        return redirect(url_for("login"))
-    return render_template('registroDocente.html', form_data={})
+        session["alerta"] = {
+            "tipo": "success",  # o "error"
+            "titulo": "Registro exitoso",
+            "mensaje": "El docente fue registrado correctamente."
+        }
+        return redirect(url_for("dashboard"))
+    return render_template("registroDocente.html", form_data={}, talleres=talleres_lista)
 
 # Editar Docente
 @app.route("/editarDocente/<matriculaD>", methods=["GET", "POST"])
@@ -548,6 +605,11 @@ def editarDocente(matriculaD):
         mysql.connection.commit()
         cursor.close()
 
+        session["alerta"] = {
+            "tipo": "success",
+            "titulo": "Cambios guardados",
+            "mensaje": f"Los datos del docente fueron actualizados correctamente."
+        }
         return redirect(url_for("dashboard"))
 
     return render_template("editarDocente.html", datos=datos)

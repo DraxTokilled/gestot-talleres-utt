@@ -111,6 +111,45 @@
         document.getElementById("menuLateral").style.left = "-250px";
     }
 </script>
+
+</script>
+<!--Alerta dinamica y reutilizable "Registro exitoso"-->
+{% if session.get("alerta") %}
+<div id="custom-alert" class="custom-alert {{ session['alerta']['tipo'] }}">
+    <div class="custom-alert-content">
+        <span class="close-btn" onclick="cerrarAlerta()">×</span>
+        <h3>{{ session['alerta']['titulo'] }}</h3>
+        <p>{{ session['alerta']['mensaje'] }}</p>
+    </div>
+</div>
+<script>
+    function cerrarAlerta() {
+        document.getElementById("custom-alert").style.display = "none";
+    }
+    setTimeout(cerrarAlerta, 4000);
+</script>
+{% set _ = session.pop("alerta") %}
+{% endif %}
+
+
+<!--Alerta dinamica y reutilizable "Cambios exitosos"-->
+{% if session.get("alerta") %}
+<div id="custom-alert" class="custom-alert {{ session['alerta']['tipo'] }}">
+    <div class="custom-alert-content">
+        <span class="close-btn" onclick="cerrarAlerta()">×</span>
+        <h3>{{ session['alerta']['titulo'] }}</h3>
+        <p>{{ session['alerta']['mensaje'] }}</p>
+    </div>
+</div>
+<script>
+    function cerrarAlerta() {
+        document.getElementById("custom-alert").style.display = "none";
+    }
+    setTimeout(cerrarAlerta, 4000);
+</script>
+{% set _ = session.pop("alerta") %}
+{% endif %}
+
 <!-- 🟢 Pie de página -->
 <footer class="footer-personalizado text-white text-center mt-5 py-4">
     <div class="container container-footer">

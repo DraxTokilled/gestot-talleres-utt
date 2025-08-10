@@ -37,6 +37,50 @@ body {
   margin: 20px 0;
 }
 
+/* Estilo para el alert personalizado */
+.custom-alert {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 40px 60px;
+  border-radius: 8px;
+  z-index: 9999;
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.custom-alert.success {
+  background-color: #078818;
+  border: 2px solid #004b13;
+  color: #ffffff;
+}
+
+.custom-alert.error {
+  background-color: #f37e10;
+  border: 2px solid #ff0800;
+  color: #ffffff;
+}
+
+.custom-alert h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.custom-alert p {
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
 .titulo-formulario {
   font-family: 'Open Sans', 'Montserrat';
   text-align: center;

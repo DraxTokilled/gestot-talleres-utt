@@ -20,94 +20,98 @@
 <hr class="linea-negra">
 <br>
         <h2 class="titulo-formulario">Registro docente taller</h2>
-        <form action="/registroDocente" method="POST" enctype="multipart/form-data">
-            <div class="form-columns">
-                <div class="column">
-                    <div class="mb-3">
-                        <label for="matriculaD">Matrícula</label>
-                        <input type="text" id="matriculaD" name="matriculaD"
-                            class="{% if 'matriculaD' in errors %}input-error{% endif %}"
-                            value="{{ form_data.get('matriculaD', '') }}" required>
-                        {% if 'matriculaD' in errors %}
-                            <div class="error-message">{{ errors['matriculaD'] }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="mb-3">
-                        <label for="nombreD">Nombre(s)</label>
-                        <input type="text" id="nombreD" name="nombreD" value="{{ request.form.get('nombreD', '') }}" class="{% if error_field == 'nombreD' %}input-error{% endif %}" required>
-                        {% if error_field == 'nombreD' %}<div class="error-message">{{ error }}</div>{% endif %}
-                    </div>
-                    <div class="mb-3">
-                        <label for="apellido_p_D">Apellido Paterno</label>
-                        <input type="text" id="apellido_p_D" name="apellido_p_D" value="{{ request.form.get('apellido_p_D', '') }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="apellido_m_D">Apellido Materno</label>
-                        <input type="text" id="apellido_m_D" name="apellido_m_D" value="{{ request.form.get('apellido_m_D', '') }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="correo_D">Correo Electrónico</label>
-                        <input type="email" id="correo_D" name="correo_D"
-                                class="{% if 'correoD' in errors %}input-error{% endif %}"
-                                value="{{ form_data.get('correo_D', '') }}" required>
-                        {% if 'correoD' in errors %}
-                            <div class="error-message">{{ errors['correo_D'] }}</div>
-                        {% endif %}
-                    </div>
+    <form action="/registroDocente" method="POST" enctype="multipart/form-data">
+        <div class="form-columns">
+            <div class="column">
+                <div class="mb-3">
+                    <label for="matriculaD">Matrícula</label>
+                    <input type="text" id="matriculaD" name="matriculaD"
+                        class="{% if 'matriculaD' in errors %}input-error{% endif %}"
+                        value="{{ form_data.get('matriculaD', '') }}" required>
+                    {% if 'matriculaD' in errors %}
+                        <div class="error-message">{{ errors['matriculaD'] }}</div>
+                    {% endif %}
                 </div>
-                <div class="column">
-                    <div class="mb-3">
-                            <label for="cedula_profesional">Cédula Profesional</label>
-                            <input type=text" id="cedula_profesional" name="cedula_profesional"
-                                class="{% if 'cedula_profesional' in errors %}input-error{% endif %}"
-                                value="{{ form_data.get('cedula_profesional', '') }}" required>
-                            {% if 'cedula_profesional' in errors %}
-                                <div class="error-message">{{ errors['cedula_profesional'] }}</div>
-                            {% endif %}
-                    </div>
-                    <div class="mb-3">
-                        <label for="taller_impartir">Taller a Impartir</label>
-                        <select id="taller_impartir" name="taller_impartir" required>
-                            <option value="seleccionaT">Selecciona un taller</option>
-                            <option value="voleibol">Voleibol</option>
-                            <option value="futbol7">Futbol 7</option>
-                            <option value="futbolS">Futbol Soccer</option>
-                            <option value="escolta">Escolta</option>
-                            <option value="beisbol">Beisbol</option>
-                            <option value="atletismo">Atletismo</option>
-                            <option value="basquetbol">Basquetbol</option>
-                            <option value="ajedrezC">Ajedrez Competitivo</option>
-                            <option value="ajedrezR">Ajedrez Recreativo</option>
-                            <option value="danza">Danza</option>
-                            <option value="porristas">Porristas</option>
-                            <option value="banda_guerra">Banda de guerra</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                    <label for="estado">Estatus</label>
-                    <select id="estado" name=estado" required>
-                        <option value="">Selecciona un estatus</option>
-                        <option value="A" {% if request.form.get('estado') == 'A' %}selected{% endif %}>Activo</option>
-                        <option value="B" {% if request.form.get('estado') == 'B' %}selected{% endif %}>Baja</option>
-                        <option value="BT" {% if request.form.get('estado') == 'BT' %}selected{% endif %}>Baja Temporal</option>
+                <div class="mb-3">
+                    <label for="nombreD">Nombre(s)</label>
+                    <input type="text" id="nombreD" name="nombreD" value="{{ request.form.get('nombreD', '') }}"
+                        class="{% if error_field == 'nombreD' %}input-error{% endif %}" required>
+                    {% if error_field == 'nombreD' %}
+                        <div class="error-message">{{ error }}</div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="apellido_p_D">Apellido Paterno</label>
+                    <input type="text" id="apellido_p_D" name="apellido_p_D"
+                        value="{{ request.form.get('apellido_p_D', '') }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="apellido_m_D">Apellido Materno</label>
+                    <input type="text" id="apellido_m_D" name="apellido_m_D"
+                        value="{{ request.form.get('apellido_m_D', '') }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="correo_D">Correo Electrónico</label>
+                    <input type="email" id="correo_D" name="correo_D"
+                        class="{% if 'correo_D' in errors %}input-error{% endif %}"
+                        value="{{ form_data.get('correo_D', '') }}" required>
+                    {% if 'correo_D' in errors %}
+                        <div class="error-message">{{ errors['correo_D'] }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="column">
+                <div class="mb-3">
+                    <label for="cedula_profesional">Cédula Profesional</label>
+                    <input type="text" id="cedula_profesional" name="cedula_profesional"
+                        class="{% if 'cedula_profesional' in errors %}input-error{% endif %}"
+                        value="{{ form_data.get('cedula_profesional', '') }}" required>
+                    {% if 'cedula_profesional' in errors %}
+                        <div class="error-message">{{ errors['cedula_profesional'] }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="taller_impartir">Taller a Impartir</label>
+                    <select id="taller_impartir" name="taller_impartir" required>
+                        <option value="">Selecciona un taller</option>
+                        {% for nombre in talleres %}
+                            <option value="{{ nombre }}" {% if form_data.get('taller_impartir') == nombre %}selected{% endif %}>
+                                {{ nombre|capitalize }}
+                            </option>
+                        {% endfor %}
                     </select>
-                    </div>
-                    <div class="mb-3" style="text-align: center;">
-                        <label for="foto_credencialD">Foto credencial docente</label>
-                        <input type="file" id="foto_credencialD" name="foto_credencialD" accept="image/*" style="display: none;">
-                        <label for="foto_credencialD" class="foto-btn">
-                            <span class="plus-icon">+</span>
-                        </label>
-                    </div>
-                    <div class="mb-3" style="text-align: center;">
+                </div>
+
+                <div class="mb-3">
+                    <label for="estatus">Estatus</label>
+                    <select id="estatus" name="estatus" required>
+                        <option value="">Selecciona un estatus</option>
+                        <option value="A" {% if request.form.get('estatus') == 'A' %}selected{% endif %}>Activo</option>
+                        <option value="B" {% if request.form.get('estatus') == 'B' %}selected{% endif %}>Baja</option>
+                        <option value="BT" {% if request.form.get('estatus') == 'BT' %}selected{% endif %}>Baja Temporal</option>
+                    </select>
+                </div>
+
+                <div class="mb-3" style="text-align: center;">
+                    <label for="foto_credencialD">Foto credencial docente</label>
+                    <input type="file" id="foto_credencialD" name="foto_credencialD" accept="image/*" style="display: none;">
+                    <label for="foto_credencialD" class="foto-btn">
+                        <span class="plus-icon">+</span>
+                    </label>
+                </div>
+
+                <div class="mb-3" style="text-align: center;">
                     <label for="nota_importante">Nota: El usuario para iniciar sesión <br> utilizará la matrícula,<br> verificar que sea correcta.</label>
-                    </div>
                 </div>
             </div>
-            <div class="button-container">
-                <button type="submit" class="btn">Guardar registro</button>
-            </div>
-        </form>
+        </div>
+
+        <div class="button-container">
+            <button type="submit" class="btn">Guardar registro</button>
+        </div>
+    </form>
     <!-- 🟢 Pie de página -->
 <footer class="footer-personalizado text-white mt-5">
     <div class="container container-footer">

@@ -20,113 +20,100 @@
 <hr class="linea-negra">
 <br>
     <h2 class="titulo-formulario">Editar Taller</h2>
-    <form method="POST" enctype="multipart/form-data">
-        <!-- Nombre taller -->
+
+    <form action="{{ url_for('editarTaller', id_taller=taller.id_taller) }}" method="POST" enctype="multipart/form-data">
+        <!-- Nombre del Taller -->
         <div class="mb-3">
             <label for="Nombre_T">Nombre Taller</label>
-            <input type="text" id="nombre_T" name="nombre_T" value="{{ datos.Nombre_T }}" required />
+            <input type="text" id="Nombre_T" name="nombre_t"
+                value="{{ taller.Nombre_T }}"
+                class="{% if 'Nombre_T' in errors %}input-error{% endif %}" required>
+            {% if 'Nombre_T' in errors %}
+                <div class="error-message">{{ errors['Nombre_T'] }}</div>
+            {% endif %}
         </div>
-        <!-- Nombre docente -->
+
+        <!-- Nombre del Docente -->
         <div class="mb-3">
             <label for="Nombre_D">Nombre Docente</label>
-            <input type="text" id="nombre_D" name="nombre_D" value="{{ datos.Nombre_D }}" required />
+            <input type="text" id="Nombre_D" name="nombre_docente"
+                value="{{ taller.Nombre_D }}" required>
+            {% if 'Nombre_D' in errors %}
+                <div class="error-message">{{ errors['Nombre_D'] }}</div>
+            {% endif %}
         </div>
-        <!-- Días del Taller (Checklist editable con días seleccionados) -->
+
+        <!-- Días del Taller -->
         <div class="mb-3">
-        <label>Días del Taller:</label><br>
-
-        <label>
-            <input type="checkbox" name="dias_t[]" value="Lunes"
-                onchange="mostrarHorario('Lunes')"
-                {% if 'Lunes' in dias_seleccionados %}checked{% endif %}>
-            Lunes
-        </label><br>
-
-        <label>
-            <input type="checkbox" name="dias_t[]" value="Martes"
-                onchange="mostrarHorario('Martes')"
-                {% if 'Martes' in dias_seleccionados %}checked{% endif %}>
-            Martes
-        </label><br>
-
-        <label>
-            <input type="checkbox" name="dias_t[]" value="Miércoles"
-                onchange="mostrarHorario('Miércoles')"
-                {% if 'Miércoles' in dias_seleccionados %}checked{% endif %}>
-            Miércoles
-        </label><br>
-
-        <label>
-            <input type="checkbox" name="dias_t[]" value="Jueves"
-                onchange="mostrarHorario('Jueves')"
-                {% if 'Jueves' in dias_seleccionados %}checked{% endif %}>
-            Jueves
-        </label><br>
-
-        <label>
-            <input type="checkbox" name="dias_t[]" value="Viernes"
-                onchange="mostrarHorario('Viernes')"
-                {% if 'Viernes' in dias_seleccionados %}checked{% endif %}>
-            Viernes
-        </label><br><br>
-        </div>
-        <!-- Horarios por Día (generados dinámicamente en edición) -->
-        <div class="mb-3">
-        <div id="contenedor-horarios">
-            {% for dia in dias_seleccionados %}
-            <div id="grupo_{{ dia }}">
-                <label>{{ dia }}:</label>
-                <input type="time" name="horario_{{ dia }}_inicio"
-                    value="{{ horarios[dia]['inicio'] if horarios.get(dia) else '' }}"
-                    required>
-
-                <input type="time" name="horario_{{ dia }}_fin"
-                    value="{{ horarios[dia]['fin'] if horarios.get(dia) else '' }}"
-                    required><br>
-            </div>
+            <label>Días del Taller:</label><br>
+            {% set dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'] %}
+            {% set dias_taller = taller.Dias_T %}
+            {% for dia in dias %}
+                <label>
+                    <input type="checkbox" name="dias_t[]" value="{{ dia }}"
+                        {% if dia in dias_taller %}checked{% endif %}
+                        onchange="mostrarHorario('{{ dia }}')"> {{ dia }}
+                </label><br>
             {% endfor %}
-        </div>
+            <br>
         </div>
 
-        <!--Estado-->
+        <!-- Contenedor de Horarios -->
         <div class="mb-3">
-            <label for="estado">Estatus</label>
-            <select id="estado" name="estado" required>
-                <option disabled {% if not datos.Estatus %}selected{% endif %}>Selecciona un estatus</option>
-                {% for e in ['A', 'B', 'BT'] %}
-                    <option value="{{ e }}" {% if datos.Estatus == e %}selected{% endif %}>
-                    {% if e == 'A' %}Activo{% elif e == 'B' %}Baja{% else %}Baja Temporal{% endif %}
-                    </option>
-                {% endfor %}
+            <div id="contenedor-horarios"></div>
+        </div>
+
+        <!-- Estatus -->
+        <div class="mb-3">
+            <label for="estatus">Estatus</label>
+            <select id="estatus" name="estatus" required>
+                <option value="">Selecciona un estatus</option>
+                <option value="A" {% if taller.Estatus == 'A' %}selected{% endif %}>Activo</option>
+                <option value="B" {% if taller.Estatus == 'B' %}selected{% endif %}>Baja</option>
+                <option value="BT" {% if taller.Estatus == 'BT' %}selected{% endif %}>Baja Temporal</option>
             </select>
+            {% if 'estatus' in errors %}
+                <div class="error-message">{{ errors['estatus'] }}</div>
+            {% endif %}
         </div>
 
         <!-- Botón -->
         <div class="button-container">
-            <button type="submit" class="btn">Guardar cambios</button>
+            <button type="submit" class="btn">Actualizar registro</button>
         </div>
     </form>
 
-    <!-- Script dinámico -->
+    <!-- JavaScript para mostrar horarios -->
     <script>
-    function mostrarHorario(dia) {
-        const contenedor = document.getElementById("contenedor-horarios");
-        const idGrupo = "grupo_" + dia;
-        const checkbox = document.querySelector('input[value="' + dia + '"]');
+        function mostrarHorario(dia, inicio = '', fin = '') {
+            const contenedor = document.getElementById("contenedor-horarios");
+            const idGrupo = "grupo_" + dia;
 
-        if (checkbox.checked && !document.getElementById(idGrupo)) {
-            const div = document.createElement("div");
-            div.id = idGrupo;
-            div.innerHTML = `
-                <label>${dia}:</label>
-                <input type="time" name="horario_${dia}_inicio" required>
-                <input type="time" name="horario_${dia}_fin" required><br>
-            `;
-            contenedor.appendChild(div);
-        } else if (!checkbox.checked && document.getElementById(idGrupo)) {
-            document.getElementById(idGrupo).remove();
+            // Si el checkbox fue marcado
+            const checkbox = document.querySelector('input[value="' + dia + '"]');
+            if (checkbox.checked && !document.getElementById(idGrupo)) {
+                const div = document.createElement("div");
+                div.id = idGrupo;
+                div.innerHTML = `
+                    <label>${dia}:</label>
+                    <input type="time" name="horario_${dia}_inicio" value="${inicio}" required>
+                    <input type="time" name="horario_${dia}_fin" value="${fin}" required><br>
+                `;
+                contenedor.appendChild(div);
+            } else if (!checkbox.checked && document.getElementById(idGrupo)) {
+                document.getElementById(idGrupo).remove();
+            }
         }
-        }
+
+        // Al cargar la página: mostrar horarios precargados
+        window.onload = function () {
+            const horarios = {{ taller.Horarios | tojson | safe }};
+            for (const dia in horarios) {
+                const [inicio, fin] = horarios[dia].split('-');
+                mostrarHorario(dia, inicio, fin);
+                document.querySelector(`input[value="${dia}"]`).checked = true;
+            }
+        };
     </script>
     <!-- 🟢 Pie de página -->
 <footer class="footer-personalizado text-white text-center mt-5 py-4">
