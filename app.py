@@ -669,6 +669,25 @@ def porristas():
 def atletismo():
     return render_template('atletismo.html')
 
+@app.route('/editar_imagenes')
+def editar_imagenes():
+    return render_template('editar_imagenes.html')
+
+@app.route('/guardar_imagen_estatica', methods=['POST'])
+def guardar_imagen_estatica():
+    archivo = request.files['imagen_estatica']
+    if archivo:
+        archivo.save('static/img/web_banner_convo_2025_03.png')
+    return redirect(url_for('dashboard'))
+
+@app.route('/guardar_imagenes_carrusel', methods=['POST'])
+def guardar_imagenes_carrusel():
+    for i in range(1, 13): 
+        archivo = request.files.get(f'carrusel_{i}')
+        if archivo:
+            archivo.save(f'static/img/carrusel_{i}.jpg')
+    return redirect(url_for('dashboard'))
+
 if __name__ == '__main__':
     app.run(debug=True)
 
