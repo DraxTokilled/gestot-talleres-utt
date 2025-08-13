@@ -44,8 +44,6 @@
 <!-- Menú lateral fijo -->
 <div id="menuLateral">
     <a href="#">Inicio</a>
-    <a href="#">Mis talleres</a>
-    <a href="#">Historial</a>
     <a href="#">Soporte</a>
     <a href="{{ url_for('registro') }}">Registro Alumno</a>
     <a href="{{ url_for('registroDocente') }}">Registro Docente</a>
@@ -65,7 +63,6 @@
     </nav>
 
     <hr class="linea-negra">
-    <br>
 
     <!-- Imagen estática con icono editar -->
 <div class="mt-4 container position-relative">
@@ -82,84 +79,70 @@
 </a>
 </div>
 
-    <!-- Carrusel de talleres -->
+    <!-- Carrusel RÁPIDO-->
 <div id="carouselExample" class="carousel slide mt-4 container" data-bs-ride="carousel">
     <div class="carousel-inner rounded shadow">
-
         <div class="carousel-item active">
             <a href="{{ url_for('futbol_soccer') }}">
-                <img src="{{ url_for('static', filename='img/fut.jpg') }}" class="d-block w-100" alt="Fútbol Soccer">
+                <img src="{{ url_for('static', filename='img/fut.jpg') }}" class="d-block w-100" alt="Taller 1">
             </a>
         </div>
-
         <div class="carousel-item">
             <a href="{{ url_for('basquetbol') }}">
-                <img src="{{ url_for('static', filename='img/basquet.jpg') }}" class="d-block w-100" alt="Básquetbol">
+                <img src="{{ url_for('static', filename='img/basquet.jpg') }}" class="d-block w-100" alt="Taller 2">
             </a>
         </div>
-
         <div class="carousel-item">
             <a href="{{ url_for('voleibol') }}">
-                <img src="{{ url_for('static', filename='img/voley.jpg') }}" class="d-block w-100" alt="Voleibol">
+                <img src="{{ url_for('static', filename='img/voley.jpg') }}" class="d-block w-100" alt="Taller 3">
             </a>
         </div>
-
         <div class="carousel-item">
             <a href="{{ url_for('escolta') }}">
-                <img src="{{ url_for('static', filename='img/escolta.jpg') }}" class="d-block w-100" alt="Escolta">
+                <img src="{{ url_for('static', filename='img/escolta.jpg') }}" class="d-block w-100" alt="Taller 4">
             </a>
         </div>
-
         <div class="carousel-item">
             <a href="{{ url_for('banda_guerra') }}">
-                <img src="{{ url_for('static', filename='img/banda_guerra.jpg') }}" class="d-block w-100" alt="Banda de Guerra">
+                <img src="{{ url_for('static', filename='img/banda_guerra.jpg') }}" class="d-block w-100" alt="Taller 5">
             </a>
         </div>
-
         <div class="carousel-item">
             <a href="{{ url_for('ajedrez_competitivo') }}">
-                <img src="{{ url_for('static', filename='img/ajedrez.jpg') }}" class="d-block w-100" alt="Ajedrez Competitivo">
+                <img src="{{ url_for('static', filename='img/ajedrez.jpg') }}" class="d-block w-100" alt="Taller 6">
             </a>
         </div>
-
         <div class="carousel-item">
             <a href="{{ url_for('futbol7') }}">
-                <img src="{{ url_for('static', filename='img/futbol7.jpg') }}" class="d-block w-100" alt="Fútbol 7">
+                <img src="{{ url_for('static', filename='img/futbol7.jpg') }}" class="d-block w-100" alt="Taller 7">
             </a>
         </div>
-
         <div class="carousel-item">
             <a href="{{ url_for('danza') }}">
-                <img src="{{ url_for('static', filename='img/danza1.jpg') }}" class="d-block w-100" alt="Danza">
+                <img src="{{ url_for('static', filename='img/danza1.jpg') }}" class="d-block w-100" alt="Taller 8">
             </a>
         </div>
-
         <div class="carousel-item">
             <a href="{{ url_for('ajedrez_recreativo') }}">
-                <img src="{{ url_for('static', filename='img/aajedrez1.jpg') }}" class="d-block w-100" alt="Ajedrez Recreativo">
+                <img src="{{ url_for('static', filename='img/aajedrez1.jpg') }}" class="d-block w-100" alt="Taller 9">
             </a>
         </div>
-
         <div class="carousel-item">
             <a href="{{ url_for('beisbol') }}">
-                <img src="{{ url_for('static', filename='img/logo1.jpg') }}" class="d-block w-100" alt="Béisbol">
+                <img src="{{ url_for('static', filename='img/logo1.jpg') }}" class="d-block w-100" alt="Taller 10">
             </a>
         </div>
-
         <div class="carousel-item">
             <a href="{{ url_for('porristas') }}">
-                <img src="{{ url_for('static', filename='img/logo2.jpg') }}" class="d-block w-100" alt="Porristas">
+                <img src="{{ url_for('static', filename='img/logo2.jpg') }}" class="d-block w-100" alt="Taller 11">
             </a>
         </div>
-
         <div class="carousel-item">
             <a href="{{ url_for('atletismo') }}">
-                <img src="{{ url_for('static', filename='img/logo3.jpg') }}" class="d-block w-100" alt="Atletismo">
+                <img src="{{ url_for('static', filename='img/logo3.jpg') }}" class="d-block w-100" alt="Taller 12">
             </a>
         </div>
-
-    </div> <!-- cierre de carousel-inner -->
-
+    </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
         <span class="carousel-control-prev-icon"></span>
     </button>
